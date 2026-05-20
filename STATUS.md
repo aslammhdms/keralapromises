@@ -45,6 +45,8 @@ Two columns per item: status against the brief, then what is left.
 - **`ProseLayout.astro`** — shared prose styling for methodology / about / FAQ; the Hallmark `.hp-prose` scope lives there.
 - **`.hallmark/log.json`** — Hallmark project memory; first entry is the home page build. Next Hallmark run on this repo will rotate macrostructure off Stat-Led automatically.
 - **Newsprint token system** in `src/styles/global.css` — locked at Hallmark Step 6. Every colour and font in the component layer references a `--color-*` or `--font-*` token; no hex values are inlined.
+- **Tiranga top stripe + `UDF 2026 manifesto tracker` subtitle** in the masthead. Both are scope/identity markers, not visual identity drawn from a party palette.
+- **Cabinet content collection (`/cabinet`, `/cabinet/<slug>`)**. Added at the maintainer's request — links each promise to the responsible minister by portfolio mapping. Three placeholders (CM, Health, Welfare) sit in `src/content/cabinet/` with `placeholder: true` so the UI surfaces an amber "Placeholder" badge wherever a stub appears. Names and constituencies fill in from gazette + oath-ceremony records. JSON API gains `responsible_minister` on every promise.
 
 ## Things deliberately deviated from the brief
 
@@ -53,6 +55,7 @@ These are notes for the maintainer; flip them back if you disagree.
 - **Latest updates as a list, not a carousel.** Brief Section 6 item 1 says "carousel"; Section 8 forbids splash animations and scroll-jacking. A reverse-chronological list is faster, accessible, and shows all five updates without interaction.
 - **`@astrojs/cloudflare` adapter removed.** Brief Section 14 item 1 lists it; on a fully static site (`output: "static"`) it produces a Worker bundle that fails on Windows with a missing-chunks error and adds no value. Re-add when a Phase 2 Worker (citizen-tip intake, BRIEF Section 3) ships.
 - **`manifesto_page` is optional on the schema.** Brief Section 5.1 shows it as required; the three placeholder promises don't have verified page numbers yet, and inventing them would violate the evidence discipline. The promise detail UI shows "page reference pending verification" when the field is absent.
+- **TERM_START moved from 2026-05-09 (brief Section 10 example JSON) to 2026-05-18** — the actual UDF oath ceremony date per the maintainer's correction. Term_end stays at 2031-05-23 per the brief. The countdown, JSON API, and cabinet `took_office` all reflect 2026-05-18.
 
 ## What to run next (the deploy path)
 

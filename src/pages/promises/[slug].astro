@@ -7,6 +7,7 @@ import CategoryPill from "../../components/CategoryPill.astro";
 import EditOnGitHub from "../../components/EditOnGitHub.astro";
 import SubmitTip from "../../components/SubmitTip.astro";
 import { formatLongDate } from "../../lib/dates";
+import { primaryMinisterForCategory, displayName as ministerName } from "../../lib/cabinet";
 
 export async function getStaticPaths() {
   const promises = await getCollection("promises");
@@ -33,6 +34,9 @@ const related = allPromises
   .slice(0, 3);
 
 const initialUpdate = data.status_updates[0];
+
+const cabinet = await getCollection("cabinet");
+const responsibleMinister = primaryMinisterForCategory(cabinet, data.category);
 
 const articleSchema = {
   "@context": "https://schema.org",
@@ -147,6 +151,28 @@ const articleSchema = {
         </div>
 
         <aside class="space-y-8 lg:sticky lg:top-8 lg:self-start">
+          {responsibleMinister && (
+            <div class="border-t border-rule pt-5">
+              <p class="eyebrow">Responsible minister</p>
+              <p class="font-display mt-2 text-h3 leading-snug text-ink-1">
+                <a
+                  href={`/cabinet/${responsibleMinister.data.slug}`}
+                  class="text-ink-1 no-underline hover:underline hover:decoration-rule-2"
+                >
+                  {ministerName(responsibleMinister, "en")}
+                </a>
+                {responsibleMinister.data.placeholder && (
+                  <span class="font-ui ml-2 align-middle rounded-sm border border-amber-300 bg-amber-50 px-1.5 py-0.5 text-micro font-medium uppercase tracking-wider text-amber-900">
+                    Placeholder
+                  </span>
+                )}
+              </p>
+              <p class="font-ui mt-1 text-small text-ink-3">
+                {responsibleMinister.data.portfolio_en} · {responsibleMinister.data.party}
+              </p>
+            </div>
+          )}
+
           <div class="border-t border-rule pt-5">
             <p class="eyebrow">Submit an update</p>
             <p class="font-body mt-2 text-small text-ink-2">

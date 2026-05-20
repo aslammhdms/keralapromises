@@ -1,0 +1,152 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PromiseCard from "../../components/PromiseCard.astro";
+import EditOnGitHub from "../../components/EditOnGitHub.astro";
+import { displayName } from "../../lib/cabinet";
+import { formatLongDate } from "../../lib/dates";
+
+export async function getStaticPaths() {
+  const ministers = await getCollection("cabinet");
+  return ministers.map((minister) => ({
+    params: { slug: minister.data.slug },
+    props: { minister },
+  }));
+}
+
+const { minister } = Astro.props;
+const data = minister.data;
+const { Content } = await render(minister);
+
+const promises = await getCollection("promises");
+const portfolios = data.portfolios_categories ?? [];
+const portfolioPromises = promises
+  .filter((p) => portfolios.includes(p.data.category))
+  .sort((a, b) => a.data.id.localeCompare(b.data.id));
+
+const sourceFile = `src/content/cabinet/${minister.id}.mdx`;
+---
+
+<BaseLayout
+  title={`${data.portfolio_en} — Kerala Promises`}
+  description={`${data.portfolio_en} in the UDF government that took oath on 18 May 2026. Responsible for ${portfolios.length} promise ${portfolios.length === 1 ? "category" : "categories"}.`}
+>
+  <article>
+    <header class="border-b border-rule">
+      <div class="mx-auto max-w-4xl px-4 py-12 sm:px-6 sm:py-16">
+        <p class="eyebrow">
+          Council of Ministers · {data.party}
+        </p>
+        <h1 class="font-display mt-3 text-display-s leading-tight text-ink-1">
+          {displayName(minister, "en")}
+          {data.placeholder && (
+            <span class="font-ui ml-3 align-middle rounded-sm border border-amber-300 bg-amber-50 px-2 py-1 text-small font-medium uppercase tracking-wider text-amber-900">
+              Placeholder
+            </span>
+          )}
+        </h1>
+        {data.name_ml && (
+          <p
+            lang="ml"
+            class="font-malayalam mt-3 text-h2 leading-snug text-ink-2"
+          >
+            {data.name_ml}
+          </p>
+        )}
+        <p class="font-body mt-4 text-h3 text-ink-2">
+          {data.portfolio_en}
+          {data.constituency_en && (
+            <span class="text-ink-3"> · {data.constituency_en}</span>
+          )}
+        </p>
+        <dl class="font-ui mt-6 grid grid-cols-1 gap-3 text-small text-ink-3 sm:grid-cols-3">
+          <div>
+            <dt class="text-micro uppercase tracking-wider">Party</dt>
+            <dd class="mt-0.5 text-ink-1">{data.party_display_en}</dd>
+          </div>
+          <div>
+            <dt class="text-micro uppercase tracking-wider">Sworn in</dt>
+            <dd class="tnum mt-0.5 text-ink-1">{formatLongDate(data.took_office, "en")}</dd>
+          </div>
+          {data.left_office && (
+            <div>
+              <dt class="text-micro uppercase tracking-wider">Left office</dt>
+              <dd class="tnum mt-0.5 text-ink-1">{formatLongDate(data.left_office, "en")}</dd>
+            </div>
+          )}
+        </dl>
+      </div>
+    </header>
+
+    <div class="mx-auto max-w-4xl px-4 py-12 sm:px-6">
+      <section class="hp-prose">
+        <Content />
+      </section>
+
+      <section aria-labelledby="portfolio-heading" class="mt-16">
+        <header class="border-b border-rule pb-3">
+          <p class="eyebrow">Responsible for</p>
+          <h2 id="portfolio-heading" class="font-display mt-2 text-h1 leading-snug text-ink-1">
+            {portfolioPromises.length} {portfolioPromises.length === 1 ? "promise" : "promises"} in this portfolio
+          </h2>
+          <p class="font-body mt-2 text-small text-ink-3">
+            Categories: {portfolios.join(" · ") || "none assigned"}
+          </p>
+        </header>
+        {portfolioPromises.length === 0 ? (
+          <p class="font-body mt-6 text-body text-ink-3">
+            No promises currently tracked in this minister's portfolio.
+          </p>
+        ) : (
+          <div class="mt-8 grid grid-cols-1 gap-x-10 gap-y-2 sm:grid-cols-2">
+            {portfolioPromises.map((p) => (
+              <PromiseCard promise={p} variant="card" />
+            ))}
+          </div>
+        )}
+      </section>
+
+      <section class="mt-16 border-t border-rule pt-6">
+        <p class="eyebrow">Transparency</p>
+        <p class="font-body mt-2 measure-prose text-small text-ink-2">
+          The full edit history of this cabinet entry is in Git. Anyone can see what changed, when, and by whom.
+        </p>
+        <div class="mt-4">
+          <EditOnGitHub path={sourceFile} />
+        </div>
+      </section>
+    </div>
+  </article>
+</BaseLayout>
+
+<style is:global>
+  .hp-prose {
+    font-family: var(--font-body);
+    color: var(--color-ink-1);
+    font-size: var(--text-body);
+    line-height: 1.7;
+  }
+  .hp-prose h2 {
+    font-family: var(--font-display);
+    font-size: var(--text-h1);
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
+  .hp-prose p,
+  .hp-prose ul,
+  .hp-prose ol {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    max-width: 65ch;
+  }
+  .hp-prose ul,
+  .hp-prose ol { padding-left: 1.5rem; }
+  .hp-prose ul li { list-style: disc; }
+  .hp-prose ol li { list-style: decimal; }
+  .hp-prose strong { font-weight: 600; }
+  .hp-prose a {
+    color: var(--color-accent);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+  }
+</style>

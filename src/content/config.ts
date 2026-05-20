@@ -158,4 +158,57 @@ const pages = defineCollection({
   }),
 });
 
-export const collections = { promises, categories, sources, pages };
+// ---------------------------------------------------------------------------
+// Cabinet — who is responsible for delivering which portfolio.
+//
+// Listing cabinet ministers is factual scope information, not endorsement.
+// Same evidence discipline as promises: every entry that loses the
+// `placeholder: true` flag must cite a Tier 1 or Tier 2 source for the name,
+// portfolio, and constituency.
+//
+// `portfolios_categories` is the link to the promises collection — when a
+// minister's portfolio covers a category, the corresponding promises surface
+// them as the responsible minister.
+// ---------------------------------------------------------------------------
+
+export const COALITION_PARTIES = [
+  "INC",
+  "IUML",
+  "KC_M",
+  "RSP",
+  "JD_U",
+  "CMP",
+  "KEC",
+  "Other",
+] as const;
+export const coalitionPartyEnum = z.enum(COALITION_PARTIES);
+export type CoalitionParty = (typeof COALITION_PARTIES)[number];
+
+const cabinet = defineCollection({
+  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/cabinet" }),
+  schema: z.object({
+    id: z.string().regex(/^minister-\d{3}$/, "id must look like minister-001"),
+    slug: z.string().regex(/^[a-z0-9-]+$/, "slug must be kebab-case"),
+    name_en: z.string().min(1),
+    name_ml: z.string().optional(),
+    portfolio_en: z.string().min(1),
+    portfolio_ml: z.string().optional(),
+    constituency_en: z.string().optional(),
+    constituency_ml: z.string().optional(),
+    party: coalitionPartyEnum,
+    party_display_en: z.string().min(1),
+    party_display_ml: z.string().optional(),
+    rank: z.number().int().positive(),
+    took_office: z.coerce.date(),
+    left_office: z.coerce.date().optional(),
+    portfolios_categories: z.array(categoryEnum).default([]),
+    photo: z.string().optional(),
+    // When true, the entry's name and constituency are stubs. The UI
+    // surfaces a "placeholder — name pending verification" badge so no
+    // reader mistakes the stub for verified data.
+    placeholder: z.boolean().default(false),
+    source_urls: z.array(z.string().url()).default([]),
+  }),
+});
+
+export const collections = { promises, categories, sources, pages, cabinet };

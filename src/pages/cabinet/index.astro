@@ -1,0 +1,78 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { sortByRank, displayName } from "../../lib/cabinet";
+import { formatLongDate } from "../../lib/dates";
+
+const ministers = sortByRank(await getCollection("cabinet"));
+const placeholderCount = ministers.filter((m) => m.data.placeholder).length;
+---
+
+<BaseLayout
+  title="Cabinet"
+  description="The Council of Ministers of the UDF government of Kerala, with the portfolios each minister is responsible for delivering."
+>
+  <section class="border-b border-rule">
+    <div class="mx-auto max-w-4xl px-4 py-12 sm:px-6 sm:py-16">
+      <p class="eyebrow">Council of Ministers</p>
+      <h1 class="font-display mt-3 measure-prose text-display-s leading-tight text-ink-1">
+        Who is responsible for delivering each promise.
+      </h1>
+      <p class="font-body mt-6 measure-prose text-body text-ink-2">
+        The Council of Ministers took oath on 18 May 2026. Each entry below names the minister, their portfolio, and the promise categories they are responsible for. Click a minister to see the promises in their portfolio.
+      </p>
+      {placeholderCount > 0 && (
+        <p class="font-ui mt-4 measure-prose rounded-sm border border-amber-300 bg-amber-50 px-3 py-2 text-small text-amber-900">
+          {placeholderCount} of {ministers.length} entries are placeholders. Names and constituencies will be filled in from the gazette notification and oath-ceremony record. See <a href="/methodology" class="underline">the methodology</a> for the source hierarchy we apply to cabinet entries.
+        </p>
+      )}
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-4xl px-4 py-12 sm:px-6">
+    <ol class="space-y-8">
+      {ministers.map((m) => {
+        const href = `/cabinet/${m.data.slug}`;
+        const portfolios = (m.data.portfolios_categories ?? []).join(" · ");
+        return (
+          <li class="grid grid-cols-1 gap-x-8 gap-y-3 border-b border-rule pb-8 sm:grid-cols-[6rem_1fr]">
+            <header class="font-ui flex flex-col gap-2 text-small text-ink-3">
+              <span class="font-display tnum text-h2 leading-snug text-ink-1">
+                {m.data.rank.toString().padStart(2, "0")}
+              </span>
+              <span class="text-micro uppercase tracking-wider">
+                {m.data.party}
+              </span>
+            </header>
+            <div>
+              <h2 class="font-display text-h2 leading-snug text-ink-1">
+                <a href={href} class="text-ink-1 no-underline hover:underline hover:decoration-rule-2">
+                  {displayName(m, "en")}
+                </a>
+                {m.data.placeholder && (
+                  <span class="font-ui ml-2 align-middle rounded-sm border border-amber-300 bg-amber-50 px-1.5 py-0.5 text-micro font-medium uppercase tracking-wider text-amber-900">
+                    Placeholder
+                  </span>
+                )}
+              </h2>
+              <p class="font-body mt-1 text-body text-ink-2">
+                {m.data.portfolio_en}
+                {m.data.constituency_en && (
+                  <span class="text-ink-3"> · {m.data.constituency_en}</span>
+                )}
+              </p>
+              <p class="font-ui mt-3 text-small text-ink-3">
+                {m.data.party_display_en} · sworn in <span class="tnum">{formatLongDate(m.data.took_office, "en")}</span>
+              </p>
+              {portfolios && (
+                <p class="font-ui mt-2 text-micro uppercase tracking-wider text-ink-3">
+                  Promise categories — {portfolios}
+                </p>
+              )}
+            </div>
+          </li>
+        );
+      })}
+    </ol>
+  </section>
+</BaseLayout>

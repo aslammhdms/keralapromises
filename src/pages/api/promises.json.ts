@@ -2,6 +2,7 @@ import type { APIRoute } from "astro";
 import { getCollection } from "astro:content";
 import { scorecard } from "../../lib/status";
 import { TERM_START, TERM_END, formatIsoDate } from "../../lib/dates";
+import { primaryMinisterForCategory } from "../../lib/cabinet";
 
 // Versioned public API. BRIEF.md Section 10 names this a public
 // contract. Breaking changes (renames, removals, type changes) require
@@ -13,6 +14,7 @@ export const prerender = true;
 export const GET: APIRoute = async () => {
   const promises = await getCollection("promises");
   const totals = scorecard(promises);
+  const cabinet = await getCollection("cabinet");
 
   const payload = {
     version: API_VERSION,
@@ -31,6 +33,7 @@ export const GET: APIRoute = async () => {
       .sort((a, b) => a.data.id.localeCompare(b.data.id))
       .map((p) => {
         const latest = p.data.status_updates[p.data.status_updates.length - 1];
+        const minister = primaryMinisterForCategory(cabinet, p.data.category);
         return {
           id: p.data.id,
           slug: p.data.slug,
@@ -69,6 +72,17 @@ export const GET: APIRoute = async () => {
             })),
           })),
           last_updated: formatIsoDate(latest.date),
+          responsible_minister: minister
+            ? {
+                id: minister.data.id,
+                slug: minister.data.slug,
+                name_en: minister.data.name_en,
+                portfolio_en: minister.data.portfolio_en,
+                party: minister.data.party,
+                placeholder: minister.data.placeholder,
+                url: `https://keralapromises.in/cabinet/${minister.data.slug}`,
+              }
+            : null,
         };
       }),
   };

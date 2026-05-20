@@ -1,0 +1,74 @@
+---
+// Cabinet minister avatar.
+//
+// When the frontmatter `photo` field is set, the real photo renders.
+// When it isn't, a neutral circle with the minister's rank number
+// takes its place — never an AI-generated portrait, never a stock
+// silhouette, never an initial of a placeholder name. The blank
+// circle plus rank is a clear signal that no photo has been verified
+// for this entry yet.
+//
+// The photo path is either:
+//   - a site-relative path like `/cabinet/health-minister.jpg`
+//     (drop the file into public/cabinet/ and reference it here)
+//   - an absolute URL to an externally hosted image
+//
+// Photo sourcing rules live in CONTRIBUTING.md § Cabinet photos.
+
+interface Props {
+  photo?: string;
+  name: string;
+  rank: number;
+  placeholder?: boolean;
+  size?: "sm" | "md" | "lg";
+  class?: string;
+}
+
+const {
+  photo,
+  name,
+  rank,
+  placeholder = false,
+  size = "md",
+  class: extraClass = "",
+} = Astro.props;
+
+const dim = {
+  sm: { box: "h-10 w-10", text: "text-small" },
+  md: { box: "h-16 w-16", text: "text-h3" },
+  lg: { box: "h-28 w-28", text: "text-h1" },
+}[size];
+
+const photoAlt = placeholder
+  ? "No verified photo yet for this cabinet entry"
+  : `Portrait of ${name}`;
+
+const rankLabel = rank.toString().padStart(2, "0");
+---
+
+{photo ? (
+  <img
+    src={photo}
+    alt={photoAlt}
+    width="200"
+    height="200"
+    loading="lazy"
+    decoding="async"
+    class:list={[
+      "shrink-0 rounded-full border border-rule object-cover",
+      dim.box,
+      extraClass,
+    ]}
+  />
+) : (
+  <div
+    aria-hidden="true"
+    class:list={[
+      "shrink-0 flex items-center justify-center rounded-full border border-rule bg-paper-2 text-ink-3",
+      dim.box,
+      extraClass,
+    ]}
+  >
+    <span class:list={["font-display tnum", dim.text]}>{rankLabel}</span>
+  </div>
+)}

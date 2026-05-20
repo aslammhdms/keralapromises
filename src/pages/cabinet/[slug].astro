@@ -3,6 +3,7 @@ import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import PromiseCard from "../../components/PromiseCard.astro";
 import EditOnGitHub from "../../components/EditOnGitHub.astro";
+import Avatar from "../../components/Avatar.astro";
 import { displayName } from "../../lib/cabinet";
 import { formatLongDate } from "../../lib/dates";
 
@@ -37,44 +38,55 @@ const sourceFile = `src/content/cabinet/${minister.id}.mdx`;
         <p class="eyebrow">
           Council of Ministers · {data.party}
         </p>
-        <h1 class="font-display mt-3 text-display-s leading-tight text-ink-1">
-          {displayName(minister, "en")}
-          {data.placeholder && (
-            <span class="font-ui ml-3 align-middle rounded-sm border border-amber-300 bg-amber-50 px-2 py-1 text-small font-medium uppercase tracking-wider text-amber-900">
-              Placeholder
-            </span>
-          )}
-        </h1>
-        {data.name_ml && (
-          <p
-            lang="ml"
-            class="font-malayalam mt-3 text-h2 leading-snug text-ink-2"
-          >
-            {data.name_ml}
-          </p>
-        )}
-        <p class="font-body mt-4 text-h3 text-ink-2">
-          {data.portfolio_en}
-          {data.constituency_en && (
-            <span class="text-ink-3"> · {data.constituency_en}</span>
-          )}
-        </p>
-        <dl class="font-ui mt-6 grid grid-cols-1 gap-3 text-small text-ink-3 sm:grid-cols-3">
-          <div>
-            <dt class="text-micro uppercase tracking-wider">Party</dt>
-            <dd class="mt-0.5 text-ink-1">{data.party_display_en}</dd>
+        <div class="mt-4 flex flex-col gap-6 sm:flex-row sm:items-start sm:gap-8">
+          <Avatar
+            photo={data.photo}
+            name={displayName(minister, "en")}
+            rank={data.rank}
+            placeholder={data.placeholder}
+            size="lg"
+          />
+          <div class="min-w-0 flex-1">
+            <h1 class="font-display text-display-s leading-tight text-ink-1">
+              {displayName(minister, "en")}
+              {data.placeholder && (
+                <span class="font-ui ml-3 align-middle rounded-sm border border-amber-300 bg-amber-50 px-2 py-1 text-small font-medium uppercase tracking-wider text-amber-900">
+                  Placeholder
+                </span>
+              )}
+            </h1>
+            {data.name_ml && (
+              <p
+                lang="ml"
+                class="font-malayalam mt-3 text-h2 leading-snug text-ink-2"
+              >
+                {data.name_ml}
+              </p>
+            )}
+            <p class="font-body mt-4 text-h3 text-ink-2">
+              {data.portfolio_en}
+              {data.constituency_en && (
+                <span class="text-ink-3"> · {data.constituency_en}</span>
+              )}
+            </p>
+            <dl class="font-ui mt-6 grid grid-cols-1 gap-3 text-small text-ink-3 sm:grid-cols-3">
+              <div>
+                <dt class="text-micro uppercase tracking-wider">Party</dt>
+                <dd class="mt-0.5 text-ink-1">{data.party_display_en}</dd>
+              </div>
+              <div>
+                <dt class="text-micro uppercase tracking-wider">Sworn in</dt>
+                <dd class="tnum mt-0.5 text-ink-1">{formatLongDate(data.took_office, "en")}</dd>
+              </div>
+              {data.left_office && (
+                <div>
+                  <dt class="text-micro uppercase tracking-wider">Left office</dt>
+                  <dd class="tnum mt-0.5 text-ink-1">{formatLongDate(data.left_office, "en")}</dd>
+                </div>
+              )}
+            </dl>
           </div>
-          <div>
-            <dt class="text-micro uppercase tracking-wider">Sworn in</dt>
-            <dd class="tnum mt-0.5 text-ink-1">{formatLongDate(data.took_office, "en")}</dd>
-          </div>
-          {data.left_office && (
-            <div>
-              <dt class="text-micro uppercase tracking-wider">Left office</dt>
-              <dd class="tnum mt-0.5 text-ink-1">{formatLongDate(data.left_office, "en")}</dd>
-            </div>
-          )}
-        </dl>
+        </div>
       </div>
     </header>
 

@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import Avatar from "../../components/Avatar.astro";
 import { sortByRank, displayName } from "../../lib/cabinet";
 import { formatLongDate } from "../../lib/dates";
 
@@ -35,15 +36,19 @@ const placeholderCount = ministers.filter((m) => m.data.placeholder).length;
         const href = `/cabinet/${m.data.slug}`;
         const portfolios = (m.data.portfolios_categories ?? []).join(" · ");
         return (
-          <li class="grid grid-cols-1 gap-x-8 gap-y-3 border-b border-rule pb-8 sm:grid-cols-[6rem_1fr]">
-            <header class="font-ui flex flex-col gap-2 text-small text-ink-3">
-              <span class="font-display tnum text-h2 leading-snug text-ink-1">
-                {m.data.rank.toString().padStart(2, "0")}
-              </span>
-              <span class="text-micro uppercase tracking-wider">
+          <li class="grid grid-cols-[auto_1fr] items-start gap-x-5 gap-y-3 border-b border-rule pb-8 sm:grid-cols-[auto_1fr]">
+            <div class="flex flex-col items-center gap-2">
+              <Avatar
+                photo={m.data.photo}
+                name={displayName(m, "en")}
+                rank={m.data.rank}
+                placeholder={m.data.placeholder}
+                size="md"
+              />
+              <span class="font-ui text-micro uppercase tracking-wider text-ink-3">
                 {m.data.party}
               </span>
-            </header>
+            </div>
             <div>
               <h2 class="font-display text-h2 leading-snug text-ink-1">
                 <a href={href} class="text-ink-1 no-underline hover:underline hover:decoration-rule-2">

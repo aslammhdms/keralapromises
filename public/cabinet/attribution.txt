@@ -1,0 +1,18 @@
+Cabinet photo attribution log
+=============================
+
+Format: one entry per file. Lines starting with # are comments.
+
+For each photo file you add to this directory, append a block here
+recording the source URL, the date you added it, and the licence
+under which we are using it.
+
+This file is the public audit trail for image provenance — same
+discipline as evidence URLs in promise frontmatter.
+
+# Example (delete when the first real entry lands):
+# file: example-minister.jpg
+# source: https://pib.gov.in/PressReleseDetailm.aspx?PRID=XXXXXXX
+# licence: Government of India Open Data Use Licence (GODL) v1.0
+# added_by: editors
+# added_on: 2026-05-18

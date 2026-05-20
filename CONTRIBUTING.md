@@ -68,6 +68,60 @@ Editors check four things on every status-change pull request:
 
 If any of these fails, an editor will leave a comment and ask you to revise.
 
+## Cabinet entries
+
+Listing public office holders is factual scope information, not endorsement. The same evidence discipline that governs promise status changes applies to cabinet entries.
+
+### To add or update a minister
+
+Cabinet entries live in `src/content/cabinet/` as one MDX file per minister. The frontmatter shape is:
+
+```yaml
+id: minister-004
+slug: education-minister
+name_en: "Verified name here"
+name_ml: "Malayalam translation here"
+portfolio_en: "Minister for General Education"
+portfolio_ml: "പൊതുവിദ്യാഭ്യാസ മന്ത്രി"
+constituency_en: "LAC name"
+constituency_ml: "നിയോജക മണ്ഡലത്തിന്റെ പേര്"
+party: INC
+party_display_en: "Indian National Congress"
+party_display_ml: "ഇന്ത്യൻ നാഷണൽ കോൺഗ്രസ്"
+rank: 4
+took_office: 2026-05-18
+portfolios_categories:
+  - education
+photo: /cabinet/education-minister.jpg
+placeholder: false
+source_urls:
+  - https://kerala.gov.in/.../gazette-notification.pdf
+  - https://pib.gov.in/.../oath-ceremony-release
+```
+
+Set `placeholder: false` only when you have a Tier 1 or Tier 2 source for the name and portfolio. The `source_urls` array is required for any non-placeholder entry — the verifying source must be admissible per `METHODOLOGY.md`.
+
+### Cabinet photos
+
+Drop the image file in `public/cabinet/<slug>.jpg` and reference it as `photo: /cabinet/<slug>.jpg` in the frontmatter. The Avatar component falls back to a neutral rank-number circle when `photo` is absent.
+
+**Sourcing rules.** A photo is admissible only if one of the following is true:
+
+- It is an official Government of India / Government of Kerala portrait release (Press Information Bureau, department websites, Kerala state portal).
+- It is on Wikimedia Commons under a Creative Commons licence that permits reuse and derivation (CC-BY, CC-BY-SA, CC0).
+- The publisher has explicitly granted reuse rights in writing.
+
+The following are **not** admissible: news-site stock photos, social media profile pictures, screenshots from TV, AI-generated portraits, or any image whose licence cannot be verified. If you cannot find an admissible photo, leave `photo` unset and the Avatar will render the rank-number fallback.
+
+**File specs.**
+
+- Square aspect ratio (the avatar masks to a circle). Head-and-shoulders crop.
+- Source: at least 800 × 800 px, JPEG or WebP, under 200 KB ideally.
+- Filename: `<slug>.jpg` matching the MDX slug.
+- Add a one-line `attribution.txt` entry to `public/cabinet/attribution.txt` recording the source URL and licence for the file you just added.
+
+**Removing a minister.** If a minister leaves office, set `left_office: YYYY-MM-DD` rather than deleting the file. The audit trail stays in Git, and the historical responsible-minister attribution on past promise updates remains accurate.
+
 ## Conflict of interest
 
 If you work for a political party, a campaign, a government department, an evidence publisher, or an organisation whose work is named in the promise you are editing, please mention this in the pull request description. It does not bar you from contributing. It just goes into the record, so the audit trail is honest.

@@ -97,9 +97,14 @@ function navLinkClass(href: string): string {
       <div class="mx-auto flex max-w-6xl flex-wrap items-baseline justify-between gap-x-8 gap-y-2 px-4 py-5 sm:px-6">
         <a
           href="/"
-          class="font-display text-xl font-semibold tracking-tight text-ink-1 no-underline hover:text-ink-1"
+          class="group flex flex-col gap-0.5 text-ink-1 no-underline hover:text-ink-1"
         >
-          {t(locale, "site.name")}
+          <span class="font-display text-xl font-semibold tracking-tight text-ink-1">
+            {t(locale, "site.name")}
+          </span>
+          <span class="font-ui text-[0.7rem] uppercase tracking-[0.14em] text-ink-3">
+            {t(locale, "site.subtitle")}
+          </span>
         </a>
         <nav aria-label="Primary" class="font-ui flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
           <a href="/promises" class={`no-underline ${navLinkClass("/promises")}`}>{t(locale, "nav.promises")}</a>

@@ -7,9 +7,6 @@ interface Props {
 
 const { locale = DEFAULT_LOCALE } = Astro.props;
 
-// Phase 1: toggle is visible but disabled. The Malayalam content pass is
-// Phase 3 (BRIEF.md Section 9). The disabled state signals intent without
-// shipping half-translated copy.
 const malayalamEnabled = PHASE_1_LOCALES_ENABLED.includes("ml");
 ---
 
@@ -20,10 +17,10 @@ const malayalamEnabled = PHASE_1_LOCALES_ENABLED.includes("ml");
   disabled={!malayalamEnabled}
   title={!malayalamEnabled ? t(locale, "language.unavailable") : undefined}
   class:list={[
-    "ml-2 inline-flex items-center rounded-md border border-neutral-300 px-2.5 py-1 text-xs font-medium",
-    !malayalamEnabled && "cursor-not-allowed text-neutral-400",
-    malayalamEnabled && "text-neutral-700 hover:border-neutral-400 hover:bg-neutral-50",
+    "font-ui ml-2 inline-flex items-center rounded border border-rule px-2.5 py-1 text-xs font-medium",
+    !malayalamEnabled && "cursor-not-allowed text-ink-4",
+    malayalamEnabled && "text-ink-2 hover:border-rule-2 hover:bg-paper-2",
   ]}
 >
-  EN <span aria-hidden="true" class="mx-1 text-neutral-300">/</span> <span lang="ml">മ</span>
+  EN <span aria-hidden="true" class="mx-1 text-ink-4">/</span> <span lang="ml">മ</span>
 </button>

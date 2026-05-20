@@ -1,0 +1,75 @@
+---
+import StatusBadge from "./StatusBadge.astro";
+import EvidenceCard from "./EvidenceCard.astro";
+import { DEFAULT_LOCALE, type Locale } from "../lib/i18n";
+import { formatLongDate } from "../lib/dates";
+
+interface StatusUpdateShape {
+  date: Date;
+  status: "pending" | "in_progress" | "fulfilled" | "evaded";
+  summary_en: string;
+  summary_ml?: string;
+  editor: string;
+  evidence: Array<{
+    type: any;
+    url: string;
+    archive_url: string;
+    publisher: string;
+    published: Date;
+    excerpt_en: string;
+    excerpt_ml?: string;
+    reporter?: string;
+    note?: string;
+  }>;
+}
+
+interface Props {
+  updates: StatusUpdateShape[];
+  locale?: Locale;
+}
+
+const { updates, locale = DEFAULT_LOCALE } = Astro.props;
+
+const sorted = [...updates].sort(
+  (a, b) => b.date.getTime() - a.date.getTime()
+);
+---
+
+<ol class="space-y-12">
+  {sorted.map((u, index) => {
+    const summary = locale === "ml" && u.summary_ml ? u.summary_ml : u.summary_en;
+    const isCurrent = index === 0;
+    return (
+      <li class="relative grid grid-cols-1 gap-4 sm:grid-cols-[10rem_1fr] sm:gap-x-10">
+        <header class="font-ui flex flex-col gap-2 text-small text-ink-3">
+          <time
+            datetime={u.date.toISOString().slice(0, 10)}
+            class="tnum font-display text-h3 leading-snug text-ink-1"
+          >
+            {formatLongDate(u.date, locale)}
+          </time>
+          <StatusBadge status={u.status} locale={locale} size="sm" />
+          {isCurrent && (
+            <span class="text-micro uppercase tracking-wider text-ink-3">
+              Current state
+            </span>
+          )}
+          <span class="text-micro uppercase tracking-wider text-ink-3">
+            By {u.editor}
+          </span>
+        </header>
+
+        <div class="space-y-5 border-l border-rule pl-6 sm:border-l-0 sm:pl-0">
+          <p class="font-body measure-prose text-body leading-relaxed text-ink-1">
+            {summary}
+          </p>
+          <div class="space-y-3">
+            {u.evidence.map((e) => (
+              <EvidenceCard evidence={e} locale={locale} />
+            ))}
+          </div>
+        </div>
+      </li>
+    );
+  })}
+</ol>

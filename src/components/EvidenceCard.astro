@@ -1,0 +1,107 @@
+---
+import { getCollection } from "astro:content";
+import { DEFAULT_LOCALE, type Locale } from "../lib/i18n";
+import { formatLongDate } from "../lib/dates";
+import { EVIDENCE_TYPES } from "../content/config";
+
+interface EvidenceShape {
+  type: typeof EVIDENCE_TYPES[number];
+  url: string;
+  archive_url: string;
+  publisher: string;
+  published: Date;
+  excerpt_en: string;
+  excerpt_ml?: string;
+  reporter?: string;
+  note?: string;
+}
+
+interface Props {
+  evidence: EvidenceShape;
+  locale?: Locale;
+}
+
+const { evidence, locale = DEFAULT_LOCALE } = Astro.props;
+
+// The schema accepts any publisher string so editors can cite outlets
+// not yet in the registry. We look up by id; misses fall through to
+// the raw string.
+const sources = await getCollection("sources");
+const publisher = sources.find((s) => s.data.id === evidence.publisher) ?? null;
+const publisherName = publisher
+  ? locale === "ml" && publisher.data.name_ml
+    ? publisher.data.name_ml
+    : publisher.data.name_en
+  : evidence.publisher;
+
+const tierLabel = publisher ? `Tier ${publisher.data.tier}` : null;
+
+const typeLabel: Record<EvidenceShape["type"], string> = {
+  manifesto: "Manifesto",
+  gazette: "Gazette",
+  government_order: "Government order",
+  government_press_release: "Government press release",
+  cabinet_statement: "Cabinet statement",
+  wire: "Wire copy",
+  longform: "Long-form reporting",
+};
+
+const excerpt =
+  locale === "ml" && evidence.excerpt_ml ? evidence.excerpt_ml : evidence.excerpt_en;
+---
+
+<figure class="border-l-2 border-rule-2 bg-paper-2 px-5 py-4">
+  <figcaption class="font-ui flex flex-wrap items-baseline gap-x-3 gap-y-1 text-micro uppercase tracking-wider text-ink-3">
+    <span>{typeLabel[evidence.type]}</span>
+    <span aria-hidden="true">·</span>
+    <span class="text-ink-2">{publisherName}</span>
+    {tierLabel && (
+      <>
+        <span aria-hidden="true">·</span>
+        <span>{tierLabel}</span>
+      </>
+    )}
+    <span aria-hidden="true">·</span>
+    <span class="tnum">{formatLongDate(evidence.published, locale)}</span>
+    {evidence.reporter && (
+      <>
+        <span aria-hidden="true">·</span>
+        <span class="text-ink-2">{evidence.reporter}</span>
+      </>
+    )}
+  </figcaption>
+
+  <blockquote class="font-body mt-3 measure-prose text-body italic leading-relaxed text-ink-1">
+    “{excerpt}”
+  </blockquote>
+
+  <div class="font-ui mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-small">
+    <a href={evidence.url} rel="noopener noreferrer" target="_blank" class="text-ink-2 hover:text-ink-1">
+      View original source
+    </a>
+    {evidence.archive_url ? (
+      <>
+        <span aria-hidden="true" class="text-ink-4">·</span>
+        <a
+          href={evidence.archive_url}
+          rel="noopener noreferrer"
+          target="_blank"
+          class="text-ink-2 hover:text-ink-1"
+        >
+          Archived copy
+        </a>
+      </>
+    ) : (
+      <>
+        <span aria-hidden="true" class="text-ink-4">·</span>
+        <span class="text-ink-3 italic">archive copy pending</span>
+      </>
+    )}
+  </div>
+
+  {evidence.note && (
+    <p class="font-ui mt-3 text-small text-ink-3 italic">
+      Editor note. {evidence.note}
+    </p>
+  )}
+</figure>

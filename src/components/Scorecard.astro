@@ -1,0 +1,88 @@
+---
+import type { Scorecard } from "../lib/status";
+import { STATUSES } from "../content/config";
+import { STATUS_ICON, STATUS_LABEL_EN, STATUS_LABEL_ML } from "../lib/status";
+import { DEFAULT_LOCALE, type Locale } from "../lib/i18n";
+
+interface Props {
+  data: Scorecard;
+  locale?: Locale;
+  showBar?: boolean;
+}
+
+const { data, locale = DEFAULT_LOCALE, showBar = true } = Astro.props;
+
+const labels = locale === "ml" ? STATUS_LABEL_ML : STATUS_LABEL_EN;
+const total = Math.max(data.total, 1);
+
+const cells = STATUSES.map((status) => ({
+  status,
+  count: data[status],
+  pct: (data[status] / total) * 100,
+  icon: STATUS_ICON[status],
+  label: labels[status],
+}));
+
+const cellAccent: Record<typeof STATUSES[number], string> = {
+  pending: "text-ink-3",
+  in_progress: "text-progress-text",
+  fulfilled: "text-fulfilled-text",
+  evaded: "text-evaded-text",
+};
+
+const barAccent: Record<typeof STATUSES[number], string> = {
+  pending: "bg-pending-border",
+  in_progress: "bg-progress-border",
+  fulfilled: "bg-fulfilled-border",
+  evaded: "bg-evaded-border",
+};
+---
+
+<section
+  aria-labelledby="scorecard-heading"
+  class="rule-y bg-paper-1 py-8"
+>
+  <h2 id="scorecard-heading" class="sr-only">Status scorecard</h2>
+
+  <div class="grid grid-cols-2 gap-y-6 sm:grid-cols-4 sm:gap-x-8">
+    {cells.map((c) => (
+      <div class="flex flex-col items-start">
+        <div class="font-ui flex items-baseline gap-2 text-micro uppercase tracking-wider text-ink-3">
+          <span aria-hidden="true" class:list={["status-glyph text-base", cellAccent[c.status]]}>
+            {c.icon}
+          </span>
+          <span>{c.label}</span>
+        </div>
+        <div class="mt-1 flex items-baseline gap-2">
+          <span class="font-display tnum text-display-s leading-none text-ink-1">
+            {c.count}
+          </span>
+          <span class="font-ui tnum text-small text-ink-3">
+            {c.pct.toFixed(0)}%
+          </span>
+        </div>
+      </div>
+    ))}
+  </div>
+
+  {showBar && (
+    <div class="mt-8 overflow-hidden rounded-sm border border-rule">
+      <div class="flex h-2 w-full">
+        {cells.map((c) => (
+          c.count > 0 && (
+            <div
+              class:list={["h-full", barAccent[c.status]]}
+              style={`width: ${c.pct}%`}
+              role="presentation"
+              title={`${c.label}: ${c.count} (${c.pct.toFixed(0)}%)`}
+            />
+          )
+        ))}
+      </div>
+    </div>
+  )}
+
+  <p class="font-ui mt-4 text-small text-ink-3">
+    {total} {total === 1 ? "promise" : "promises"} tracked
+  </p>
+</section>

@@ -1,0 +1,77 @@
+---
+import { daysInOffice, daysRemaining, termLengthDays, termFractionElapsed, TERM_START, TERM_END, formatLongDate } from "../lib/dates";
+import { DEFAULT_LOCALE, type Locale, t } from "../lib/i18n";
+
+interface Props {
+  now?: Date;
+  locale?: Locale;
+}
+
+const { now = new Date(), locale = DEFAULT_LOCALE } = Astro.props;
+
+const inOffice = daysInOffice(now);
+const remaining = daysRemaining(now);
+const total = termLengthDays();
+const elapsed = termFractionElapsed(now);
+
+const startLabel = formatLongDate(TERM_START, locale);
+const endLabel = formatLongDate(TERM_END, locale);
+---
+
+<section
+  aria-labelledby="countdown-heading"
+  class="border-b border-rule bg-paper-1 py-8"
+>
+  <h2 id="countdown-heading" class="sr-only">Term countdown</h2>
+
+  <div class="grid grid-cols-1 gap-6 sm:grid-cols-[1fr_auto_1fr] sm:items-baseline sm:gap-x-12">
+    <div>
+      <p class="font-ui text-micro uppercase tracking-wider text-ink-3">
+        {t(locale, "countdown.days_in_office")}
+      </p>
+      <p class="font-display tnum mt-1 text-display leading-none text-ink-1">
+        {inOffice.toLocaleString()}
+      </p>
+      <p class="font-ui mt-2 text-small text-ink-3">
+        since {startLabel}
+      </p>
+    </div>
+
+    <div
+      aria-hidden="true"
+      class="hidden h-16 w-px self-center bg-rule sm:block"
+    />
+
+    <div class="sm:text-right">
+      <p class="font-ui text-micro uppercase tracking-wider text-ink-3">
+        {t(locale, "countdown.days_remaining")}
+      </p>
+      <p class="font-display tnum mt-1 text-display leading-none text-ink-1">
+        {remaining.toLocaleString()}
+      </p>
+      <p class="font-ui mt-2 text-small text-ink-3">
+        until {endLabel}
+      </p>
+    </div>
+  </div>
+
+  <div class="mt-6">
+    <div
+      role="progressbar"
+      aria-valuenow={Math.round(elapsed * 100)}
+      aria-valuemin="0"
+      aria-valuemax="100"
+      aria-label="Term elapsed"
+      class="h-1 w-full overflow-hidden rounded-full bg-paper-3"
+    >
+      <div
+        class="h-full bg-ink-2"
+        style={`width: ${elapsed * 100}%`}
+      />
+    </div>
+    <p class="font-ui tnum mt-2 text-micro uppercase tracking-wider text-ink-3">
+      Day {inOffice.toLocaleString()} of {total.toLocaleString()}
+      · {(elapsed * 100).toFixed(1)}% of term
+    </p>
+  </div>
+</section>

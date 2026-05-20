@@ -5,9 +5,6 @@ interface Props {
   variant?: "link" | "button";
 }
 
-// The Tally form URL is owned by the editors. Set a real URL here before
-// going to production. The query parameter pre-fills the promise ID field
-// in the form when the visitor clicks through from a promise detail page.
 const TALLY_FORM_URL = "https://tally.so/r/keralapromises-tip";
 
 const {
@@ -26,7 +23,7 @@ const url = promiseId
     href={url}
     rel="noopener noreferrer"
     target="_blank"
-    class="inline-flex items-center gap-2 rounded-md border border-neutral-900 bg-neutral-900 px-4 py-2 text-sm font-medium text-white hover:bg-neutral-800"
+    class="font-ui inline-flex items-center gap-2 rounded-sm border border-ink-1 bg-ink-1 px-4 py-2 text-sm font-medium text-paper-1 no-underline hover:bg-ink-2"
   >
     {label}
   </a>
@@ -35,7 +32,7 @@ const url = promiseId
     href={url}
     rel="noopener noreferrer"
     target="_blank"
-    class="text-sm underline underline-offset-2 hover:text-neutral-900"
+    class="font-ui text-sm text-ink-2 hover:text-ink-1"
   >
     {label}
   </a>

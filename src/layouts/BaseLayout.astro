@@ -33,8 +33,8 @@ const currentPath = Astro.url.pathname;
 function navLinkClass(href: string): string {
   const active = currentPath === href || (href !== "/" && currentPath.startsWith(href));
   return active
-    ? "border-b-2 border-neutral-900 pb-1 font-medium text-neutral-900"
-    : "pb-1 text-neutral-700 hover:text-neutral-900";
+    ? "border-b border-ink-1 pb-1 font-medium text-ink-1"
+    : "border-b border-transparent pb-1 text-ink-2 hover:text-ink-1";
 }
 ---
 
@@ -43,7 +43,7 @@ function navLinkClass(href: string): string {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#0a0a0a" />
+    <meta name="theme-color" content="#fdfcf8" />
     <meta name="generator" content={Astro.generator} />
 
     <title>{fullTitle}</title>
@@ -79,27 +79,32 @@ function navLinkClass(href: string): string {
     )}
   </head>
 
-  <body class="bg-white text-neutral-900 antialiased">
+  <body>
     <a
       href="#main"
-      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-neutral-900 focus:px-4 focus:py-2 focus:text-white"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-ink-1 focus:px-4 focus:py-2 focus:text-paper-1"
     >
       Skip to main content
     </a>
 
     <DisclaimerBanner locale={locale} />
 
-    <header class="border-b border-neutral-200">
-      <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6">
-        <a href="/" class="text-lg font-semibold tracking-tight">
+    {/* N7: compact wordmark + 4 inline links, no button-right.
+        Civic / journalistic register — no CTA in the masthead. */}
+    <header class="border-b border-rule">
+      <div class="mx-auto flex max-w-6xl flex-wrap items-baseline justify-between gap-x-8 gap-y-2 px-4 py-5 sm:px-6">
+        <a
+          href="/"
+          class="font-display text-xl font-semibold tracking-tight text-ink-1 no-underline hover:text-ink-1"
+        >
           {t(locale, "site.name")}
         </a>
-        <nav aria-label="Primary" class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
-          <a href="/promises" class={navLinkClass("/promises")}>{t(locale, "nav.promises")}</a>
-          <a href="/latest" class={navLinkClass("/latest")}>{t(locale, "nav.latest")}</a>
-          <a href="/methodology" class={navLinkClass("/methodology")}>{t(locale, "nav.methodology")}</a>
-          <a href="/about" class={navLinkClass("/about")}>{t(locale, "nav.about")}</a>
-          <a href="/faq" class={navLinkClass("/faq")}>{t(locale, "nav.faq")}</a>
+        <nav aria-label="Primary" class="font-ui flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
+          <a href="/promises" class={`no-underline ${navLinkClass("/promises")}`}>{t(locale, "nav.promises")}</a>
+          <a href="/latest" class={`no-underline ${navLinkClass("/latest")}`}>{t(locale, "nav.latest")}</a>
+          <a href="/methodology" class={`no-underline ${navLinkClass("/methodology")}`}>{t(locale, "nav.methodology")}</a>
+          <a href="/about" class={`no-underline ${navLinkClass("/about")}`}>{t(locale, "nav.about")}</a>
+          <a href="/faq" class={`no-underline ${navLinkClass("/faq")}`}>{t(locale, "nav.faq")}</a>
           <LanguageToggle locale={locale} />
         </nav>
       </div>
@@ -109,27 +114,30 @@ function navLinkClass(href: string): string {
       <slot />
     </main>
 
-    <footer class="mt-24 border-t border-neutral-200 bg-neutral-50">
-      <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-        <p class="max-w-3xl text-sm leading-6 text-neutral-700">
+    {/* Ft5 Statement: the disclaimer + good-faith line is the page's
+        last word. Practical chips (RSS / JSON / GitHub) tucked below. */}
+    <footer class="mt-24 border-t border-rule bg-paper-2">
+      <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+        <p class="font-display measure-prose text-h3 leading-relaxed text-ink-1">
           {t(locale, "site.disclaimer")}
         </p>
-        <div class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-neutral-600">
+        <p class="font-body mt-6 measure-prose text-sm leading-relaxed text-ink-2">
+          {t(locale, "site.good_faith")}
+        </p>
+        <div class="font-ui mt-10 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-rule pt-6 text-micro text-ink-3 uppercase tracking-wider">
           <span>{t(locale, "footer.code_licence")}</span>
           <span aria-hidden="true">·</span>
           <span>{t(locale, "footer.content_licence")}</span>
           <span aria-hidden="true">·</span>
           <a
             href="https://github.com/keralapromises/keralapromises"
-            class="underline underline-offset-2 hover:text-neutral-900"
+            class="text-ink-2 no-underline hover:text-ink-1"
             rel="noopener noreferrer"
-          >
-            {t(locale, "footer.source")}
-          </a>
+          >GitHub</a>
           <span aria-hidden="true">·</span>
-          <a href="/rss.xml" class="underline underline-offset-2 hover:text-neutral-900">RSS</a>
+          <a href="/rss.xml" class="text-ink-2 no-underline hover:text-ink-1">RSS</a>
           <span aria-hidden="true">·</span>
-          <a href="/api/promises.json" class="underline underline-offset-2 hover:text-neutral-900">JSON API</a>
+          <a href="/api/promises.json" class="text-ink-2 no-underline hover:text-ink-1">JSON API</a>
         </div>
       </div>
     </footer>

@@ -30,3 +30,11 @@ Thumbs.db
 
 # pagefind output
 public/pagefind/
+
+# AI agent skill installations (per-user, not project source)
+.agents/
+.claude/skills/
+skills-lock.json
+
+# hallmark build memory (committed selectively if the user wants it)
+.hallmark/

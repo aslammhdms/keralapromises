@@ -1,7 +1,5 @@
 ---
 interface Props {
-  // Path to the file relative to the repo root, e.g.
-  // "src/content/promises/udf-2026-001-ksrtc-free-travel-women.mdx"
   path: string;
   branch?: string;
   repo?: string;
@@ -19,20 +17,12 @@ const href = `https://github.com/${repo}/edit/${branch}/${path}`;
 const historyHref = `https://github.com/${repo}/commits/${branch}/${path}`;
 ---
 
-<div class="flex flex-wrap items-center gap-3 text-sm">
-  <a
-    href={href}
-    rel="noopener noreferrer"
-    class="inline-flex items-center gap-1 underline underline-offset-2 hover:text-neutral-900"
-  >
+<div class="font-ui flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-ink-2">
+  <a href={href} rel="noopener noreferrer" class="text-ink-2 hover:text-ink-1">
     {label}
   </a>
-  <span aria-hidden="true" class="text-neutral-300">·</span>
-  <a
-    href={historyHref}
-    rel="noopener noreferrer"
-    class="inline-flex items-center gap-1 underline underline-offset-2 hover:text-neutral-900"
-  >
+  <span aria-hidden="true" class="text-ink-4">·</span>
+  <a href={historyHref} rel="noopener noreferrer" class="text-ink-2 hover:text-ink-1">
     View edit history
   </a>
 </div>

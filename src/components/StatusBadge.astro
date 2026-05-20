@@ -15,27 +15,27 @@ const label = locale === "ml" ? STATUS_LABEL_ML[status] : STATUS_LABEL_EN[status
 const icon = STATUS_ICON[status];
 
 const sizeClass = {
-  sm: "text-xs px-2 py-0.5 gap-1",
-  md: "text-sm px-2.5 py-1 gap-1.5",
+  sm: "text-xs px-2 py-0.5 gap-1.5",
+  md: "text-sm px-2.5 py-1 gap-2",
   lg: "text-base px-3 py-1.5 gap-2",
 }[size];
 
-const statusClass: Record<Status, string> = {
-  pending: "bg-neutral-100 text-neutral-800 border-neutral-300",
-  in_progress: "bg-amber-50 text-amber-900 border-amber-300",
-  fulfilled: "bg-emerald-50 text-emerald-900 border-emerald-300",
-  evaded: "bg-rose-50 text-rose-900 border-rose-300",
+const statusStyle: Record<Status, string> = {
+  pending:     "bg-pending-bg text-pending-text border-pending-border",
+  in_progress: "bg-progress-bg text-progress-text border-progress-border",
+  fulfilled:   "bg-fulfilled-bg text-fulfilled-text border-fulfilled-border",
+  evaded:      "bg-evaded-bg text-evaded-text border-evaded-border",
 };
 ---
 
 <span
   class:list={[
-    "inline-flex items-center rounded-full border font-medium tabular-nums",
+    "font-ui inline-flex items-center rounded-full border font-medium tnum",
     sizeClass,
-    statusClass[status],
+    statusStyle[status],
   ]}
   data-status={status}
 >
-  <span aria-hidden="true" class="font-mono">{icon}</span>
+  <span aria-hidden="true" class="status-glyph">{icon}</span>
   <span>{label}</span>
 </span>

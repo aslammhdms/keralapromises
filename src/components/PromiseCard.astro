@@ -1,0 +1,66 @@
+---
+import type { CollectionEntry } from "astro:content";
+import StatusBadge from "./StatusBadge.astro";
+import CategoryPill from "./CategoryPill.astro";
+import { DEFAULT_LOCALE, type Locale } from "../lib/i18n";
+import { formatLongDate } from "../lib/dates";
+
+interface Props {
+  promise: CollectionEntry<"promises">;
+  locale?: Locale;
+  variant?: "card" | "row";
+}
+
+const { promise, locale = DEFAULT_LOCALE, variant = "card" } = Astro.props;
+
+const data = promise.data;
+const title = locale === "ml" && data.title_ml ? data.title_ml : data.title_en;
+const lastUpdate = data.status_updates[data.status_updates.length - 1];
+const href = `/promises/${data.slug}`;
+const deadlineLabel = data.target?.deadline
+  ? formatLongDate(data.target.deadline, locale)
+  : null;
+---
+
+{variant === "card" ? (
+  <article class="group flex h-full flex-col gap-4 border-t border-rule pt-5">
+    <div class="flex items-start justify-between gap-4">
+      <CategoryPill category={data.category} locale={locale} />
+      <StatusBadge status={data.current_status} locale={locale} size="sm" />
+    </div>
+
+    <h3 class="font-display text-h2 leading-tight text-ink-1">
+      <a
+        href={href}
+        class="text-ink-1 no-underline hover:underline hover:decoration-rule-2"
+      >
+        {title}
+      </a>
+    </h3>
+
+    <dl class="font-ui mt-auto grid grid-cols-2 gap-4 text-small text-ink-3">
+      {deadlineLabel && (
+        <div>
+          <dt class="text-micro uppercase tracking-wider">Promised by</dt>
+          <dd class="tnum mt-0.5 text-ink-2">{deadlineLabel}</dd>
+        </div>
+      )}
+      <div>
+        <dt class="text-micro uppercase tracking-wider">Last updated</dt>
+        <dd class="tnum mt-0.5 text-ink-2">{formatLongDate(lastUpdate.date, locale)}</dd>
+      </div>
+    </dl>
+  </article>
+) : (
+  <article class="grid grid-cols-[auto_1fr_auto] items-baseline gap-x-4 border-b border-rule py-4">
+    <span class="font-ui tnum text-micro uppercase tracking-wider text-ink-3">
+      {data.id.replace("udf-2026-", "#")}
+    </span>
+    <h3 class="font-body text-body leading-snug text-ink-1">
+      <a href={href} class="text-ink-1 no-underline hover:underline hover:decoration-rule-2">
+        {title}
+      </a>
+    </h3>
+    <StatusBadge status={data.current_status} locale={locale} size="sm" />
+  </article>
+)}

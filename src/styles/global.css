@@ -1,21 +1,170 @@
+/* Hallmark v1.0.0 · macrostructure: Stat-Led · genre: editorial
+ * theme: Newsprint (light · roman-serif · warm-neutral)
+ * nav: N7 (compact wordmark + inline links) · footer: Ft5 (Statement)
+ * enrichment: none (typography only) · motion: motion-cut
+ * audience: civically engaged Indian readers, 22-75, bilingual
+ * use: read the current state of the UDF 2026 manifesto record
+ * tone: institutional · sober · trustworthy · not flashy · not playful
+ */
+
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  /* --- Newsprint paper band — warm off-white through hairline grey --- */
+  --color-paper-1: oklch(98.5% 0.005 80);
+  --color-paper-2: oklch(96% 0.007 80);
+  --color-paper-3: oklch(93% 0.009 80);
+  --color-rule:    oklch(85% 0.008 80);
+  --color-rule-2:  oklch(78% 0.008 80);
+
+  /* --- Ink scale — warm near-black through mid-grey --- */
+  --color-ink-1: oklch(20% 0.012 50);
+  --color-ink-2: oklch(38% 0.012 50);
+  --color-ink-3: oklch(54% 0.010 50);
+  --color-ink-4: oklch(68% 0.008 50);
+
+  /* --- Accent — ink-brown, used sparingly on links and emphasis --- */
+  --color-accent:   oklch(38% 0.055 35);
+  --color-accent-2: oklch(46% 0.055 35);
+
+  /* --- Status palette — four colours, each carries semantic weight.
+   * Do not reuse for decoration. BRIEF.md Section 5.2: four states, no
+   * others. */
+  --color-pending-bg:     oklch(94% 0.005 80);
+  --color-pending-text:   oklch(35% 0.012 50);
+  --color-pending-border: oklch(82% 0.010 80);
+
+  --color-progress-bg:     oklch(95% 0.04 75);
+  --color-progress-text:   oklch(38% 0.09 60);
+  --color-progress-border: oklch(78% 0.10 70);
+
+  --color-fulfilled-bg:     oklch(95% 0.04 150);
+  --color-fulfilled-text:   oklch(38% 0.10 150);
+  --color-fulfilled-border: oklch(75% 0.10 150);
+
+  --color-evaded-bg:     oklch(95% 0.035 25);
+  --color-evaded-text:   oklch(40% 0.12 25);
+  --color-evaded-border: oklch(76% 0.11 25);
+
+  /* --- Type system — system-newspaper. No webfonts. Honest to the
+   * project's voice and helps Lighthouse on a 3G connection. --- */
+  --font-display:   Georgia, "Times New Roman", "DejaVu Serif", serif;
+  --font-body:      Georgia, "Times New Roman", "DejaVu Serif", serif;
+  --font-ui:        "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono:      ui-monospace, "Cascadia Mono", "Segoe UI Mono", "JetBrains Mono", monospace;
   --font-malayalam: "Noto Sans Malayalam", "Manjari", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+
+  /* --- Typographic scale — modest, newspaper-coded. --- */
+  --text-display:        clamp(2.5rem, 5vw + 1rem, 4rem);
+  --text-display--line-height: 1.08;
+  --text-display-s:      clamp(2rem, 3.5vw + 0.5rem, 3rem);
+  --text-display-s--line-height: 1.14;
+  --text-h1:             clamp(1.75rem, 2.5vw + 0.5rem, 2.25rem);
+  --text-h1--line-height: 1.18;
+  --text-h2:             clamp(1.375rem, 1.5vw + 0.5rem, 1.625rem);
+  --text-h2--line-height: 1.22;
+  --text-h3:             1.125rem;
+  --text-h3--line-height: 1.4;
+  --text-body:           1rem;
+  --text-body--line-height: 1.6;
+  --text-small:          0.875rem;
+  --text-small--line-height: 1.55;
+  --text-micro:          0.75rem;
+  --text-micro--line-height: 1.45;
 }
+
+/* --- Named utilities not in @theme. Direct CSS use; not Tailwind. --- */
+
+:root {
+  /* Tabular figures applied where it matters (counts, dates, %). */
+  --feat-tnum: "tnum" 1, "lnum" 1;
+
+  /* Motion budget — motion-cut. */
+  --ease-out:    cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in:     cubic-bezier(0.55, 0, 1, 0.45);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast:    120ms;
+  --dur-base:    180ms;
+}
+
+/* --- Base reset and prose defaults --------------------------------- */
 
 html {
   -webkit-text-size-adjust: 100%;
   text-rendering: optimizeLegibility;
+  color-scheme: light;
+  background: var(--color-paper-1);
+  overflow-x: clip;
 }
 
 body {
-  font-family: var(--font-sans);
+  font-family: var(--font-body);
+  font-feature-settings: var(--feat-tnum);
+  color: var(--color-ink-1);
+  background: var(--color-paper-1);
+  overflow-x: clip;
+  min-width: 0;
+  line-height: 1.55;
 }
 
 :lang(ml) {
   font-family: var(--font-malayalam);
+  line-height: 1.7;
 }
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.18;
+  color: var(--color-ink-1);
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.15em;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+a:hover { color: var(--color-accent-2); }
+
+:focus-visible {
+  outline: 2px solid var(--color-ink-1);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* --- Newsprint helper utilities (used by .astro components) -------- */
+
+.eyebrow {
+  font-family: var(--font-ui);
+  font-size: var(--text-micro);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-ink-3);
+}
+
+.status-glyph {
+  font-family: var(--font-mono);
+  font-feature-settings: normal;
+  font-weight: 500;
+}
+
+.tnum { font-feature-settings: var(--feat-tnum); }
+
+.measure-prose  { max-width: 65ch; }
+.measure-short  { max-width: 50ch; }

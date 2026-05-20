@@ -1,0 +1,21 @@
+# Wrangler configuration for Cloudflare Pages.
+#
+# This site is fully static today. The @astrojs/cloudflare adapter is
+# wired up so that future server endpoints — for example a Worker that
+# accepts citizen tips and opens a GitHub issue (BRIEF.md Section 3,
+# Phase 2) — can be added without restructuring.
+#
+# The SESSION KV binding below silences the adapter's session warning.
+# It is unused at runtime; the static build does not touch it. Replace
+# the placeholder id and preview_id with real KV namespace ids when the
+# first session-using feature lands.
+
+name = "keralapromises"
+compatibility_date = "2026-05-01"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = "./dist"
+
+[[kv_namespaces]]
+binding = "SESSION"
+id = "0000000000000000000000000000000a"
+preview_id = "0000000000000000000000000000000b"

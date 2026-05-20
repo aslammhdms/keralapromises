@@ -1,15 +1,27 @@
 ---
-import "../styles/global.css";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import StatusBadge from "../components/StatusBadge.astro";
+import { t } from "../lib/i18n";
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Kerala Promises</title>
-  </head>
-  <body>
-    <p>Scaffold placeholder. Real home page lands in a later commit via Hallmark.</p>
-  </body>
-</html>
+<BaseLayout
+  title="Kerala Promises"
+  description="A non-partisan public ledger of the UDF government's 2026 manifesto promises."
+>
+  <section class="mx-auto max-w-3xl px-4 py-16 sm:px-6">
+    <h1 class="text-3xl font-semibold tracking-tight">Scaffold placeholder</h1>
+    <p class="mt-3 text-neutral-700">
+      The real home page is the next commit and will be designed with Hallmark.
+      The primitives are wired and visible below.
+    </p>
+    <div class="mt-8 flex flex-wrap gap-3">
+      <StatusBadge status="pending" />
+      <StatusBadge status="in_progress" />
+      <StatusBadge status="fulfilled" />
+      <StatusBadge status="evaded" />
+    </div>
+    <p class="mt-12 max-w-2xl text-sm leading-6 text-neutral-700">
+      {t("en", "site.good_faith")}
+    </p>
+  </section>
+</BaseLayout>

@@ -1,0 +1,40 @@
+---
+import { DEFAULT_LOCALE, type Locale, t } from "../lib/i18n";
+
+interface Props {
+  locale?: Locale;
+}
+
+const { locale = DEFAULT_LOCALE } = Astro.props;
+---
+
+<aside
+  id="disclaimer-banner"
+  role="note"
+  aria-label="Site disclaimer"
+  class="border-b border-neutral-800 bg-neutral-950 text-white"
+>
+  <div class="mx-auto flex max-w-6xl items-start gap-4 px-4 py-3 sm:px-6">
+    <p class="flex-1 text-sm leading-6">
+      {t(locale, "site.disclaimer")}
+    </p>
+    <button
+      type="button"
+      data-dismiss
+      aria-controls="disclaimer-banner"
+      aria-label="Dismiss disclaimer for this page view"
+      class="ml-2 shrink-0 rounded border border-neutral-700 px-2 py-0.5 text-xs text-neutral-200 hover:bg-neutral-800 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-300"
+    >
+      Dismiss
+    </button>
+  </div>
+</aside>
+
+<script>
+  // Per BRIEF.md Section 7: dismissible, reappears on each load. No
+  // persistence — the banner is back on the next navigation.
+  const banner = document.getElementById("disclaimer-banner");
+  banner?.querySelector("[data-dismiss]")?.addEventListener("click", () => {
+    banner.remove();
+  });
+</script>

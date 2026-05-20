@@ -1,0 +1,41 @@
+---
+import type { Status } from "../content/config";
+import { STATUS_ICON, STATUS_LABEL_EN, STATUS_LABEL_ML } from "../lib/status";
+import { DEFAULT_LOCALE, type Locale } from "../lib/i18n";
+
+interface Props {
+  status: Status;
+  locale?: Locale;
+  size?: "sm" | "md" | "lg";
+}
+
+const { status, locale = DEFAULT_LOCALE, size = "md" } = Astro.props;
+
+const label = locale === "ml" ? STATUS_LABEL_ML[status] : STATUS_LABEL_EN[status];
+const icon = STATUS_ICON[status];
+
+const sizeClass = {
+  sm: "text-xs px-2 py-0.5 gap-1",
+  md: "text-sm px-2.5 py-1 gap-1.5",
+  lg: "text-base px-3 py-1.5 gap-2",
+}[size];
+
+const statusClass: Record<Status, string> = {
+  pending: "bg-neutral-100 text-neutral-800 border-neutral-300",
+  in_progress: "bg-amber-50 text-amber-900 border-amber-300",
+  fulfilled: "bg-emerald-50 text-emerald-900 border-emerald-300",
+  evaded: "bg-rose-50 text-rose-900 border-rose-300",
+};
+---
+
+<span
+  class:list={[
+    "inline-flex items-center rounded-full border font-medium tabular-nums",
+    sizeClass,
+    statusClass[status],
+  ]}
+  data-status={status}
+>
+  <span aria-hidden="true" class="font-mono">{icon}</span>
+  <span>{label}</span>
+</span>

@@ -1,0 +1,137 @@
+---
+import "../styles/global.css";
+import DisclaimerBanner from "../components/DisclaimerBanner.astro";
+import LanguageToggle from "../components/LanguageToggle.astro";
+import { DEFAULT_LOCALE, type Locale, t } from "../lib/i18n";
+
+interface Props {
+  title: string;
+  description: string;
+  locale?: Locale;
+  canonical?: string;
+  ogImage?: string;
+  schema?: object;
+}
+
+const {
+  title,
+  description,
+  locale = DEFAULT_LOCALE,
+  canonical,
+  ogImage = "/og-preview.webp",
+  schema,
+} = Astro.props;
+
+const fullTitle = title === "Kerala Promises"
+  ? title
+  : `${title} — Kerala Promises`;
+
+const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.site).toString();
+const ogImageUrl = new URL(ogImage, Astro.site).toString();
+const currentPath = Astro.url.pathname;
+
+function navLinkClass(href: string): string {
+  const active = currentPath === href || (href !== "/" && currentPath.startsWith(href));
+  return active
+    ? "border-b-2 border-neutral-900 pb-1 font-medium text-neutral-900"
+    : "pb-1 text-neutral-700 hover:text-neutral-900";
+}
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0a0a0a" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:site_name" content="Kerala Promises" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="Kerala Promises — status updates"
+      href="/rss.xml"
+    />
+
+    {schema && (
+      <script
+        is:inline
+        type="application/ld+json"
+        set:html={JSON.stringify(schema)}
+      />
+    )}
+  </head>
+
+  <body class="bg-white text-neutral-900 antialiased">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-neutral-900 focus:px-4 focus:py-2 focus:text-white"
+    >
+      Skip to main content
+    </a>
+
+    <DisclaimerBanner locale={locale} />
+
+    <header class="border-b border-neutral-200">
+      <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6">
+        <a href="/" class="text-lg font-semibold tracking-tight">
+          {t(locale, "site.name")}
+        </a>
+        <nav aria-label="Primary" class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
+          <a href="/promises" class={navLinkClass("/promises")}>{t(locale, "nav.promises")}</a>
+          <a href="/latest" class={navLinkClass("/latest")}>{t(locale, "nav.latest")}</a>
+          <a href="/methodology" class={navLinkClass("/methodology")}>{t(locale, "nav.methodology")}</a>
+          <a href="/about" class={navLinkClass("/about")}>{t(locale, "nav.about")}</a>
+          <a href="/faq" class={navLinkClass("/faq")}>{t(locale, "nav.faq")}</a>
+          <LanguageToggle locale={locale} />
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <footer class="mt-24 border-t border-neutral-200 bg-neutral-50">
+      <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+        <p class="max-w-3xl text-sm leading-6 text-neutral-700">
+          {t(locale, "site.disclaimer")}
+        </p>
+        <div class="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-neutral-600">
+          <span>{t(locale, "footer.code_licence")}</span>
+          <span aria-hidden="true">·</span>
+          <span>{t(locale, "footer.content_licence")}</span>
+          <span aria-hidden="true">·</span>
+          <a
+            href="https://github.com/keralapromises/keralapromises"
+            class="underline underline-offset-2 hover:text-neutral-900"
+            rel="noopener noreferrer"
+          >
+            {t(locale, "footer.source")}
+          </a>
+          <span aria-hidden="true">·</span>
+          <a href="/rss.xml" class="underline underline-offset-2 hover:text-neutral-900">RSS</a>
+          <span aria-hidden="true">·</span>
+          <a href="/api/promises.json" class="underline underline-offset-2 hover:text-neutral-900">JSON API</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

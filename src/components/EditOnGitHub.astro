@@ -1,0 +1,38 @@
+---
+interface Props {
+  // Path to the file relative to the repo root, e.g.
+  // "src/content/promises/udf-2026-001-ksrtc-free-travel-women.mdx"
+  path: string;
+  branch?: string;
+  repo?: string;
+  label?: string;
+}
+
+const {
+  path,
+  branch = "main",
+  repo = "keralapromises/keralapromises",
+  label = "Edit on GitHub",
+} = Astro.props;
+
+const href = `https://github.com/${repo}/edit/${branch}/${path}`;
+const historyHref = `https://github.com/${repo}/commits/${branch}/${path}`;
+---
+
+<div class="flex flex-wrap items-center gap-3 text-sm">
+  <a
+    href={href}
+    rel="noopener noreferrer"
+    class="inline-flex items-center gap-1 underline underline-offset-2 hover:text-neutral-900"
+  >
+    {label}
+  </a>
+  <span aria-hidden="true" class="text-neutral-300">·</span>
+  <a
+    href={historyHref}
+    rel="noopener noreferrer"
+    class="inline-flex items-center gap-1 underline underline-offset-2 hover:text-neutral-900"
+  >
+    View edit history
+  </a>
+</div>

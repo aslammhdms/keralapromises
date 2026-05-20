@@ -1,0 +1,64 @@
+name: archive-mirror
+
+# On every push to main, scan promise files for evidence URLs that have
+# not yet been archived to the Internet Archive, request a save, and
+# commit the resulting archive_url back into the frontmatter.
+#
+# Failure to archive a single URL is logged but never blocks the deploy.
+# BRIEF.md Section 11.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "src/content/promises/**.mdx"
+      - "src/content/promises/**.md"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: archive-mirror
+  cancel-in-progress: false
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install script dependencies
+        run: npm install --no-save --no-audit --no-fund gray-matter@4.0.3 yaml@2.6.1
+
+      - name: Mirror evidence URLs to archive.org
+        id: mirror
+        env:
+          # The Wayback Save Page Now API works without auth at low
+          # volume. If we ever raise volume, set IA_S3_ACCESS_KEY and
+          # IA_S3_SECRET_KEY as repository secrets and the script will
+          # pick them up automatically.
+          IA_S3_ACCESS_KEY: ${{ secrets.IA_S3_ACCESS_KEY }}
+          IA_S3_SECRET_KEY: ${{ secrets.IA_S3_SECRET_KEY }}
+        run: node scripts/mirror-evidence.mjs
+
+      - name: Commit archive URLs
+        if: steps.mirror.outputs.changed == 'true'
+        env:
+          GIT_AUTHOR_NAME: kerala-promises-archivebot
+          GIT_AUTHOR_EMAIL: archivebot@keralapromises.in
+          GIT_COMMITTER_NAME: kerala-promises-archivebot
+          GIT_COMMITTER_EMAIL: archivebot@keralapromises.in
+        run: |
+          git add src/content/promises/
+          git commit -m "chore(archive): record archive.org snapshots [skip ci]"
+          git push origin HEAD:main

@@ -63,6 +63,21 @@
     "homepage": "https://www.mathrubhumi.com"
   },
   {
+    "id": "madhyamam",
+    "name_en": "Madhyamam",
+    "name_ml": "മാധ്യമം",
+    "tier": 3,
+    "kind": "newspaper",
+    "homepage": "https://www.madhyamam.com"
+  },
+  {
+    "id": "business_today",
+    "name_en": "Business Today",
+    "tier": 3,
+    "kind": "newspaper",
+    "homepage": "https://www.businesstoday.in"
+  },
+  {
     "id": "the_hindu",
     "name_en": "The Hindu",
     "tier": 3,

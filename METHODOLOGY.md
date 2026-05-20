@@ -72,7 +72,7 @@ Press notes from the Press Information Bureau, the Information and Public Relati
 
 ### Tier 3 — Wire copy (PTI or ANI) carried by a Tier-A publication
 
-Wire copy carried by one of the following publications: Malayala Manorama, Onmanorama, Mathrubhumi, The Hindu, The Indian Express, The News Minute, Deccan Herald, Hindustan Times, The Times of India (Kerala desk).
+Wire copy carried by one of the following publications: Malayala Manorama, Onmanorama, Mathrubhumi, Madhyamam, The Hindu, The Indian Express, The News Minute, Deccan Herald, Hindustan Times, The Times of India (Kerala desk).
 
 Wire copy carried only by publications outside this list is not admissible at Tier 3.
 
@@ -157,3 +157,4 @@ Minor changes — typos, examples, clearer prose — can be merged by any editor
 ## Changelog
 
 - 2026-05-20 — Initial methodology committed to the repository.
+- 2026-05-20 — Added Madhyamam to the Tier-A admissible publications list. The list now reads: Malayala Manorama, Onmanorama, Mathrubhumi, Madhyamam, The Hindu, The Indian Express, The News Minute, Deccan Herald, Hindustan Times, The Times of India (Kerala desk).

@@ -1,0 +1,107 @@
+[
+  {
+    "id": "health",
+    "name_en": "Health",
+    "name_ml": "ആരോഗ്യം",
+    "description_en": "Promises about hospitals, insurance, public health programmes, and medical access.",
+    "order": 1
+  },
+  {
+    "id": "education",
+    "name_en": "Education",
+    "name_ml": "വിദ്യാഭ്യാസം",
+    "description_en": "Promises about schools, colleges, scholarships, curriculum, and skill development.",
+    "order": 2
+  },
+  {
+    "id": "agriculture",
+    "name_en": "Agriculture",
+    "name_ml": "കൃഷി",
+    "description_en": "Promises about farmers, crop pricing, irrigation, plantation, and rural livelihoods.",
+    "order": 3
+  },
+  {
+    "id": "infrastructure",
+    "name_en": "Infrastructure",
+    "name_ml": "അടിസ്ഥാന സൗകര്യങ്ങൾ",
+    "description_en": "Promises about roads, bridges, ports, water supply, and public works.",
+    "order": 4
+  },
+  {
+    "id": "women_child",
+    "name_en": "Women and Child",
+    "name_ml": "സ്ത്രീ-ശിശു",
+    "description_en": "Promises about women's welfare, child welfare, and gender-specific schemes.",
+    "order": 5
+  },
+  {
+    "id": "welfare_pensions",
+    "name_en": "Welfare and Pensions",
+    "name_ml": "ക്ഷേമം-പെൻഷൻ",
+    "description_en": "Promises about social pensions, senior citizens, persons with disabilities, and welfare boards.",
+    "order": 6
+  },
+  {
+    "id": "industry_jobs",
+    "name_en": "Industry and Jobs",
+    "name_ml": "വ്യവസായം-തൊഴിൽ",
+    "description_en": "Promises about industry, MSMEs, employment, and unemployment allowances.",
+    "order": 7
+  },
+  {
+    "id": "technology",
+    "name_en": "Technology",
+    "name_ml": "സാങ്കേതികവിദ്യ",
+    "description_en": "Promises about IT, AI, digital services, and innovation.",
+    "order": 8
+  },
+  {
+    "id": "environment",
+    "name_en": "Environment",
+    "name_ml": "പരിസ്ഥിതി",
+    "description_en": "Promises about climate, conservation, pollution, and renewable energy.",
+    "order": 9
+  },
+  {
+    "id": "law_order",
+    "name_en": "Law and Order",
+    "name_ml": "ക്രമസമാധാനം",
+    "description_en": "Promises about policing, justice, women's safety, and the legal system.",
+    "order": 10
+  },
+  {
+    "id": "fiscal",
+    "name_en": "Fiscal",
+    "name_ml": "ധനകാര്യം",
+    "description_en": "Promises about taxes, public finance, debt, and the state budget.",
+    "order": 11
+  },
+  {
+    "id": "culture_heritage",
+    "name_en": "Culture and Heritage",
+    "name_ml": "സംസ്കാരം-പൈതൃകം",
+    "description_en": "Promises about cinema, literature, museums, and the preservation of heritage.",
+    "order": 12
+  },
+  {
+    "id": "transport",
+    "name_en": "Transport",
+    "name_ml": "ഗതാഗതം",
+    "description_en": "Promises about KSRTC, railways, metro, ports, and public transit.",
+    "order": 13
+  },
+  {
+    "id": "housing",
+    "name_en": "Housing",
+    "name_ml": "ഭവനനിർമ്മാണം",
+    "description_en": "Promises about housing schemes, slum redevelopment, and land titles.",
+    "order": 14
+  },
+  {
+    "id": "tribal_dalit",
+    "name_en": "Tribal and Dalit Welfare",
+    "name_ml": "ആദിവാസി-ദലിത് ക്ഷേമം",
+    "description_en": "Promises specific to Scheduled Tribe and Scheduled Caste communities.",
+    "order": 15
+  }
+]

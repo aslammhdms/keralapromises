@@ -1,0 +1,115 @@
+[
+  {
+    "id": "government_of_kerala",
+    "name_en": "Government of Kerala",
+    "tier": 1,
+    "kind": "government",
+    "homepage": "https://kerala.gov.in",
+    "notes": "Source for gazette notifications, government orders, and official statements."
+  },
+  {
+    "id": "kerala_gazette",
+    "name_en": "Kerala Gazette",
+    "tier": 1,
+    "kind": "government",
+    "homepage": "https://compose.kerala.gov.in/gazette",
+    "notes": "Statutory gazette publication of the Government of Kerala. Gold standard."
+  },
+  {
+    "id": "press_information_bureau_kerala",
+    "name_en": "Press Information Bureau (Thiruvananthapuram)",
+    "tier": 2,
+    "kind": "government",
+    "homepage": "https://pib.gov.in/indexd.aspx",
+    "notes": "Government of India's information service; carries Kerala state government press notes."
+  },
+  {
+    "id": "pti",
+    "name_en": "Press Trust of India",
+    "tier": 3,
+    "kind": "wire",
+    "homepage": "https://www.ptinews.com",
+    "notes": "Wire copy must be carried by a Tier-A publication to be cited."
+  },
+  {
+    "id": "ani",
+    "name_en": "Asian News International",
+    "tier": 3,
+    "kind": "wire",
+    "homepage": "https://www.aninews.in",
+    "notes": "Wire copy must be carried by a Tier-A publication to be cited."
+  },
+  {
+    "id": "malayala_manorama",
+    "name_en": "Malayala Manorama",
+    "name_ml": "മലയാള മനോരമ",
+    "tier": 3,
+    "kind": "newspaper",
+    "homepage": "https://www.manoramaonline.com"
+  },
+  {
+    "id": "onmanorama",
+    "name_en": "Onmanorama",
+    "tier": 3,
+    "kind": "newspaper",
+    "homepage": "https://www.onmanorama.com"
+  },
+  {
+    "id": "mathrubhumi",
+    "name_en": "Mathrubhumi",
+    "name_ml": "മാതൃഭൂമി",
+    "tier": 3,
+    "kind": "newspaper",
+    "homepage": "https://www.mathrubhumi.com"
+  },
+  {
+    "id": "the_hindu",
+    "name_en": "The Hindu",
+    "tier": 3,
+    "kind": "newspaper",
+    "homepage": "https://www.thehindu.com"
+  },
+  {
+    "id": "indian_express",
+    "name_en": "The Indian Express",
+    "tier": 3,
+    "kind": "newspaper",
+    "homepage": "https://indianexpress.com"
+  },
+  {
+    "id": "the_news_minute",
+    "name_en": "The News Minute",
+    "tier": 3,
+    "kind": "newspaper",
+    "homepage": "https://www.thenewsminute.com"
+  },
+  {
+    "id": "deccan_herald",
+    "name_en": "Deccan Herald",
+    "tier": 3,
+    "kind": "newspaper",
+    "homepage": "https://www.deccanherald.com"
+  },
+  {
+    "id": "hindustan_times",
+    "name_en": "Hindustan Times",
+    "tier": 3,
+    "kind": "newspaper",
+    "homepage": "https://www.hindustantimes.com"
+  },
+  {
+    "id": "times_of_india_kerala",
+    "name_en": "The Times of India (Kerala desk)",
+    "tier": 3,
+    "kind": "newspaper",
+    "homepage": "https://timesofindia.indiatimes.com/city/thiruvananthapuram"
+  },
+  {
+    "id": "indian_national_congress",
+    "name_en": "Indian National Congress",
+    "tier": 1,
+    "kind": "manifesto",
+    "homepage": "https://www.inc.in",
+    "notes": "Source of the UDF 2026 manifesto. Cited only as the issuing party of the manifesto document; party press releases are not admissible evidence for status changes."
+  }
+]

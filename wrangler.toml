@@ -1,21 +1,18 @@
-# Wrangler configuration for Cloudflare Pages.
+# Wrangler / Cloudflare Pages configuration.
 #
-# This site is fully static today. The @astrojs/cloudflare adapter is
-# wired up so that future server endpoints — for example a Worker that
-# accepts citizen tips and opens a GitHub issue (BRIEF.md Section 3,
-# Phase 2) — can be added without restructuring.
+# The site is fully static — there is no Worker. Cloudflare Pages
+# serves dist/ directly. The settings the Pages dashboard needs are:
 #
-# The SESSION KV binding below silences the adapter's session warning.
-# It is unused at runtime; the static build does not touch it. Replace
-# the placeholder id and preview_id with real KV namespace ids when the
-# first session-using feature lands.
+#   Framework preset:        Astro
+#   Build command:           npm run build
+#   Build output directory:  dist
+#   Root directory:          /
+#   Node version:            22  (env var: NODE_VERSION)
+#
+# Add a Phase 2 Worker by re-introducing @astrojs/cloudflare in
+# astro.config.mjs and switching output to "server" or "hybrid".
+# At that point the KV / R2 / D1 bindings live here.
 
 name = "keralapromises"
-compatibility_date = "2026-05-01"
-compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = "./dist"
-
-[[kv_namespaces]]
-binding = "SESSION"
-id = "0000000000000000000000000000000a"
-preview_id = "0000000000000000000000000000000b"
+compatibility_date = "2026-05-01"

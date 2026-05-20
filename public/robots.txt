@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://keralapromises.in/sitemap-index.xml

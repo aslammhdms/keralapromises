@@ -1,0 +1,5 @@
+# Cloudflare Pages — redirects.
+# Documentation: https://developers.cloudflare.com/pages/configuration/redirects/
+
+# Old short paths reserved for editorial use. Nothing yet.
+# /old-path  /new-path  301

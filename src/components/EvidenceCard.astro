@@ -48,6 +48,25 @@ const typeLabel: Record<EvidenceShape["type"], string> = {
 
 const excerpt =
   locale === "ml" && evidence.excerpt_ml ? evidence.excerpt_ml : evidence.excerpt_en;
+
+// Same-origin evidence URLs (e.g. the manifesto PDF hosted at
+// /manifesto/udf-2026.pdf) are stored as absolute production URLs in
+// the frontmatter — that is the canonical citation, used in the JSON
+// API. For the live link, rewrite to a relative path so the click
+// works on localhost, preview, and prod without modification.
+const siteOrigin = Astro.site?.origin ?? "https://keralapromises.in";
+function localiseSameOrigin(absoluteUrl: string): string {
+  try {
+    const u = new URL(absoluteUrl);
+    if (u.origin === siteOrigin) {
+      return u.pathname + u.search + u.hash;
+    }
+  } catch {
+    /* not a parseable URL — fall through */
+  }
+  return absoluteUrl;
+}
+const evidenceHref = localiseSameOrigin(evidence.url);
 ---
 
 <figure class="border-l-2 border-rule-2 bg-paper-2 px-5 py-4">
@@ -76,7 +95,7 @@ const excerpt =
   </blockquote>
 
   <div class="font-ui mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-small">
-    <a href={evidence.url} rel="noopener noreferrer" target="_blank" class="text-ink-2 hover:text-ink-1">
+    <a href={evidenceHref} rel="noopener noreferrer" target="_blank" class="text-ink-2 hover:text-ink-1">
       View original source
     </a>
     {evidence.archive_url ? (

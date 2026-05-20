@@ -88,84 +88,92 @@
   --dur-base:    180ms;
 }
 
-/* --- Base reset and prose defaults --------------------------------- */
+/* --- Base reset and prose defaults ---------------------------------
+ * These live in @layer base so Tailwind utility classes (text-ink-1,
+ * text-paper-1, no-underline, etc.) — which sit in @layer utilities —
+ * can override them. Without the layer wrapper, un-layered rules
+ * defined here would beat utility classes on equal specificity and
+ * silently invalidate every `text-paper-1` on an <a>. */
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    color-scheme: light;
+    background: var(--color-paper-1);
+    overflow-x: clip;
+  }
 
-html {
-  -webkit-text-size-adjust: 100%;
-  text-rendering: optimizeLegibility;
-  color-scheme: light;
-  background: var(--color-paper-1);
-  overflow-x: clip;
-}
+  body {
+    font-family: var(--font-body);
+    font-feature-settings: var(--feat-tnum);
+    color: var(--color-ink-1);
+    background: var(--color-paper-1);
+    overflow-x: clip;
+    min-width: 0;
+    line-height: 1.55;
+  }
 
-body {
-  font-family: var(--font-body);
-  font-feature-settings: var(--feat-tnum);
-  color: var(--color-ink-1);
-  background: var(--color-paper-1);
-  overflow-x: clip;
-  min-width: 0;
-  line-height: 1.55;
-}
+  :lang(ml) {
+    font-family: var(--font-malayalam);
+    line-height: 1.7;
+  }
 
-:lang(ml) {
-  font-family: var(--font-malayalam);
-  line-height: 1.7;
-}
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.18;
+    color: var(--color-ink-1);
+    overflow-wrap: anywhere;
+    min-width: 0;
+  }
 
-h1, h2, h3, h4 {
-  font-family: var(--font-display);
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  line-height: 1.18;
-  color: var(--color-ink-1);
-  overflow-wrap: anywhere;
-  min-width: 0;
-}
+  a {
+    color: var(--color-accent);
+    text-decoration-line: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.15em;
+    transition: color var(--dur-fast) var(--ease-out);
+  }
 
-a {
-  color: var(--color-accent);
-  text-decoration-line: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.15em;
-  transition: color var(--dur-fast) var(--ease-out);
-}
+  a:hover { color: var(--color-accent-2); }
 
-a:hover { color: var(--color-accent-2); }
+  :focus-visible {
+    outline: 2px solid var(--color-ink-1);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
 
-:focus-visible {
-  outline: 2px solid var(--color-ink-1);
-  outline-offset: 2px;
-  border-radius: 2px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
 
-/* --- Newsprint helper utilities (used by .astro components) -------- */
+/* --- Newsprint helper utilities. In @layer utilities so they
+ * co-operate with Tailwind utilities in the same layer. */
+@layer utilities {
+  .eyebrow {
+    font-family: var(--font-ui);
+    font-size: var(--text-micro);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-ink-3);
+  }
 
-.eyebrow {
-  font-family: var(--font-ui);
-  font-size: var(--text-micro);
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--color-ink-3);
+  .status-glyph {
+    font-family: var(--font-mono);
+    font-feature-settings: normal;
+    font-weight: 500;
+  }
+
+  .tnum { font-feature-settings: var(--feat-tnum); }
+
+  .measure-prose  { max-width: 65ch; }
+  .measure-short  { max-width: 50ch; }
 }
-
-.status-glyph {
-  font-family: var(--font-mono);
-  font-feature-settings: normal;
-  font-weight: 500;
-}
-
-.tnum { font-feature-settings: var(--feat-tnum); }
-
-.measure-prose  { max-width: 65ch; }
-.measure-short  { max-width: 50ch; }

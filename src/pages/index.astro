@@ -1,27 +1,143 @@
 ---
+import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import Scorecard from "../components/Scorecard.astro";
+import Countdown from "../components/Countdown.astro";
+import PromiseCard from "../components/PromiseCard.astro";
 import StatusBadge from "../components/StatusBadge.astro";
+import SubmitTip from "../components/SubmitTip.astro";
+import { scorecard, latestUpdates } from "../lib/status";
+import { formatLongDate } from "../lib/dates";
 import { t } from "../lib/i18n";
+
+const promises = await getCollection("promises");
+const score = scorecard(promises);
+const recent = latestUpdates(promises, 5);
+const flagship = promises
+  .filter((p) => p.data.flagship)
+  .sort((a, b) => a.data.id.localeCompare(b.data.id));
+
+const homeSchema = {
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  name: "Kerala Promises — UDF 2026 manifesto tracker",
+  description:
+    "A non-partisan public ledger of the Kerala UDF government's 2026 manifesto promises, with the current status of each promise and the evidence behind it.",
+  url: "https://keralapromises.in",
+  license: "https://creativecommons.org/licenses/by-sa/4.0/",
+  creator: { "@type": "Organization", name: "Kerala Promises editors" },
+  variableMeasured: ["pending", "in_progress", "fulfilled", "evaded"],
+  temporalCoverage: "2026-05-09/2031-05-23",
+};
 ---
 
 <BaseLayout
   title="Kerala Promises"
-  description="A non-partisan public ledger of the UDF government's 2026 manifesto promises."
+  description="A non-partisan public ledger of the Kerala UDF government's 2026 manifesto promises, with the current status of each promise and the evidence behind it."
+  schema={homeSchema}
 >
-  <section class="mx-auto max-w-3xl px-4 py-16 sm:px-6">
-    <h1 class="text-3xl font-semibold tracking-tight">Scaffold placeholder</h1>
-    <p class="mt-3 text-neutral-700">
-      The real home page is the next commit and will be designed with Hallmark.
-      The primitives are wired and visible below.
-    </p>
-    <div class="mt-8 flex flex-wrap gap-3">
-      <StatusBadge status="pending" />
-      <StatusBadge status="in_progress" />
-      <StatusBadge status="fulfilled" />
-      <StatusBadge status="evaded" />
+  {/* HERO --- Stat-Led: tagline is short, the data does the rest of the work. */}
+  <section class="border-b border-rule">
+    <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
+      <p class="eyebrow">Kerala · Term 14 · UDF · 2026 to 2031</p>
+      <h1 class="font-display mt-3 measure-prose text-display leading-[1.05] text-ink-1">
+        A public notepad for every promise made in the UDF 2026 manifesto.
+      </h1>
+      <p class="font-body mt-6 measure-prose text-h3 leading-relaxed text-ink-2">
+        We are not a political party, a campaign, or a newsroom. We are ordinary people from Kerala maintaining a record, so the promises we were given five years from now still mean what they meant five years ago.
+      </p>
+      <p class="font-ui mt-8 text-small text-ink-3">
+        Term began {formatLongDate(new Date("2026-05-09"), "en")}. The record runs to {formatLongDate(new Date("2031-05-23"), "en")}.
+      </p>
     </div>
-    <p class="mt-12 max-w-2xl text-sm leading-6 text-neutral-700">
-      {t("en", "site.good_faith")}
-    </p>
+  </section>
+
+  {/* COUNTDOWN + SCORECARD --- the two stat blocks side-by-side on desktop. */}
+  <section aria-label="Current state of the record" class="mx-auto max-w-6xl px-4 sm:px-6">
+    <Countdown locale="en" />
+    <Scorecard data={score} locale="en" />
+  </section>
+
+  {/* LATEST UPDATES --- reverse-chronological strip, not a carousel. */}
+  <section aria-labelledby="latest-heading" class="mx-auto max-w-6xl px-4 pt-16 sm:px-6">
+    <header class="flex items-baseline justify-between gap-6 border-b border-rule pb-4">
+      <h2 id="latest-heading" class="font-display text-h1 text-ink-1">Latest updates</h2>
+      <a href="/latest" class="font-ui text-small text-ink-2 no-underline hover:text-ink-1">
+        See all
+      </a>
+    </header>
+
+    {recent.length === 0 ? (
+      <p class="font-body mt-6 text-body text-ink-3">No status updates yet.</p>
+    ) : (
+      <ol class="mt-6 space-y-5">
+        {recent.map(({ promise, update }) => {
+          const title = promise.data.title_en;
+          const href = `/promises/${promise.data.slug}`;
+          return (
+            <li class="grid grid-cols-1 gap-x-6 gap-y-2 border-b border-rule pb-5 sm:grid-cols-[10rem_1fr_auto] sm:items-baseline">
+              <time
+                datetime={update.date.toISOString().slice(0, 10)}
+                class="font-ui tnum text-micro uppercase tracking-wider text-ink-3"
+              >
+                {formatLongDate(update.date, "en")}
+              </time>
+              <p class="font-body text-body leading-snug text-ink-1">
+                <a href={href} class="text-ink-1 no-underline hover:underline hover:decoration-rule-2">
+                  {title}
+                </a>
+                <span class="font-ui ml-2 text-small text-ink-3">— {update.summary_en}</span>
+              </p>
+              <StatusBadge status={update.status} size="sm" />
+            </li>
+          );
+        })}
+      </ol>
+    )}
+  </section>
+
+  {/* FLAGSHIP --- the priority promises grid. Card variant. */}
+  <section aria-labelledby="flagship-heading" class="mx-auto max-w-6xl px-4 pt-20 sm:px-6">
+    <header class="border-b border-rule pb-4">
+      <p class="eyebrow">Flagship promises</p>
+      <h2 id="flagship-heading" class="font-display mt-2 text-h1 text-ink-1">
+        The commitments we are watching first.
+      </h2>
+      <p class="font-body mt-3 measure-prose text-body text-ink-2">
+        These are the promises the UDF named as flagship guarantees in the manifesto. The full set of {score.total} {score.total === 1 ? "promise" : "promises"} is on <a href="/promises">the promises page</a>.
+      </p>
+    </header>
+
+    {flagship.length === 0 ? (
+      <p class="font-body mt-6 text-body text-ink-3">No flagship promises yet.</p>
+    ) : (
+      <div class="mt-8 grid grid-cols-1 gap-x-10 gap-y-2 sm:grid-cols-2 lg:grid-cols-3">
+        {flagship.map((p) => (
+          <PromiseCard promise={p} variant="card" locale="en" />
+        ))}
+      </div>
+    )}
+  </section>
+
+  {/* GOOD-FAITH + CTA --- restated good-faith line + Tally form. */}
+  <section class="mt-24 border-t border-rule bg-paper-2">
+    <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+      <p class="eyebrow">In good faith</p>
+      <p class="font-display measure-prose mt-3 text-h1 leading-snug text-ink-1">
+        {t("en", "site.good_faith")}
+      </p>
+      <p class="font-body mt-6 measure-prose text-body text-ink-2">
+        If you know that something has been done, started, or abandoned, tell us. The submission form takes a minute and you do not need a GitHub account.
+      </p>
+      <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-4">
+        <SubmitTip variant="button" label="Submit an update" />
+        <a href="/methodology" class="font-ui text-small text-ink-2 no-underline hover:text-ink-1">
+          How we decide what counts
+        </a>
+        <a href="/about" class="font-ui text-small text-ink-2 no-underline hover:text-ink-1">
+          Who runs this site
+        </a>
+      </div>
+    </div>
   </section>
 </BaseLayout>

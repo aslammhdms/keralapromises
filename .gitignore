@@ -34,6 +34,7 @@ public/pagefind/
 # AI agent skill installations (per-user, not project source)
 .agents/
 .claude/skills/
+.claude/settings.local.json
 skills-lock.json
 
 # hallmark build memory (committed selectively if the user wants it)

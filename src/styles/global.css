@@ -27,6 +27,15 @@
   --color-accent:   oklch(38% 0.055 35);
   --color-accent-2: oklch(46% 0.055 35);
 
+  /* --- Tiranga (national flag) tokens. Used only on the page-top
+   * stripe in BaseLayout. National symbol, not a party — keeps the
+   * site's "for the people of Kerala" register without taking a
+   * partisan stance. Values approximate BIS IS-1: India Saffron and
+   * India Green. */
+  --color-flag-saffron: oklch(74% 0.17 60);
+  --color-flag-white:   oklch(100% 0 0);
+  --color-flag-green:   oklch(50% 0.16 145);
+
   /* --- Status palette — four colours, each carries semantic weight.
    * Do not reuse for decoration. BRIEF.md Section 5.2: four states, no
    * others. */

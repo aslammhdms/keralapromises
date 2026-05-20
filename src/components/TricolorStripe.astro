@@ -1,0 +1,20 @@
+---
+// A 12-pixel tall horizontal stripe at the top of every page, stacked
+// saffron / white / India green per the Indian national flag. The flag
+// is a national symbol, not a party emblem — the brief's non-partisan
+// rule is preserved.
+//
+// Token values live in src/styles/global.css under --color-flag-*.
+// The visible white band is a thin hairline so it doesn't disappear on
+// the warm Newsprint paper.
+---
+
+<div
+  aria-hidden="true"
+  class="flex h-3 w-full flex-col"
+  data-tiranga
+>
+  <span class="h-1 bg-flag-saffron"></span>
+  <span class="h-1 bg-flag-white"></span>
+  <span class="h-1 bg-flag-green"></span>
+</div>

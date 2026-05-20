@@ -100,7 +100,11 @@ const promises = defineCollection({
     title_en: z.string().min(1),
     title_ml: z.string().optional(),
     manifesto: z.literal("udf-2026"),
-    manifesto_page: z.number().int().positive(),
+    // Optional during the scaffolding phase: real page numbers land with the
+    // full manifesto extraction (see BRIEF.md Section 14 item 7). Promises
+    // without a manifesto_page must surface a "page pending" indicator in
+    // the UI.
+    manifesto_page: z.number().int().positive().optional(),
     category: categoryEnum,
     flagship: z.boolean().default(false),
     target: targetSchema,

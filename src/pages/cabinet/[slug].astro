@@ -65,6 +65,11 @@ const sourceFile = `src/content/cabinet/${minister.id}.mdx`;
             )}
             <p class="font-body mt-4 text-h3 text-ink-2">
               {data.portfolio_en}
+              {data.portfolio_pending_gazette && !data.placeholder && (
+                <span class="font-ui ml-2 align-middle rounded-sm border border-amber-200 bg-amber-50 px-2 py-0.5 text-small font-medium uppercase tracking-wider text-amber-900">
+                  Pending gazette
+                </span>
+              )}
               {data.constituency_en && (
                 <span class="text-ink-3"> · {data.constituency_en}</span>
               )}

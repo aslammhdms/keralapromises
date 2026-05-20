@@ -175,6 +175,7 @@ export const COALITION_PARTIES = [
   "INC",
   "IUML",
   "KC_M",
+  "KC_J",
   "RSP",
   "JD_U",
   "CMP",
@@ -207,6 +208,11 @@ const cabinet = defineCollection({
     // surfaces a "placeholder — name pending verification" badge so no
     // reader mistakes the stub for verified data.
     placeholder: z.boolean().default(false),
+    // When true, the portfolio shown is reported by media but not yet
+    // confirmed by gazette notification or government order. The UI
+    // surfaces this distinctly from `placeholder`. Once the Tier 1
+    // gazette publishes, flip this to false and update source_urls.
+    portfolio_pending_gazette: z.boolean().default(false),
     source_urls: z.array(z.string().url()).default([]),
   }),
 });

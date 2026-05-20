@@ -7,6 +7,9 @@ import { formatLongDate } from "../../lib/dates";
 
 const ministers = sortByRank(await getCollection("cabinet"));
 const placeholderCount = ministers.filter((m) => m.data.placeholder).length;
+const portfolioPendingCount = ministers.filter(
+  (m) => m.data.portfolio_pending_gazette && !m.data.placeholder,
+).length;
 ---
 
 <BaseLayout
@@ -25,6 +28,11 @@ const placeholderCount = ministers.filter((m) => m.data.placeholder).length;
       {placeholderCount > 0 && (
         <p class="font-ui mt-4 measure-prose rounded-sm border border-amber-300 bg-amber-50 px-3 py-2 text-small text-amber-900">
           {placeholderCount} of {ministers.length} entries are placeholders. Names and constituencies will be filled in from the gazette notification and oath-ceremony record. See <a href="/methodology" class="underline">the methodology</a> for the source hierarchy we apply to cabinet entries.
+        </p>
+      )}
+      {portfolioPendingCount > 0 && (
+        <p class="font-ui mt-4 measure-prose rounded-sm border border-amber-200 bg-amber-50/60 px-3 py-2 text-small text-amber-900">
+          Portfolio allocations for {portfolioPendingCount} of {ministers.length} ministers are reported by media but not yet published in the gazette. We mark these distinctly until the Tier 1 source lands.
         </p>
       )}
     </div>
@@ -62,6 +70,11 @@ const placeholderCount = ministers.filter((m) => m.data.placeholder).length;
               </h2>
               <p class="font-body mt-1 text-body text-ink-2">
                 {m.data.portfolio_en}
+                {m.data.portfolio_pending_gazette && !m.data.placeholder && (
+                  <span class="font-ui ml-2 align-middle rounded-sm border border-amber-200 bg-amber-50 px-1.5 py-0.5 text-micro font-medium uppercase tracking-wider text-amber-900">
+                    Pending gazette
+                  </span>
+                )}
                 {m.data.constituency_en && (
                   <span class="text-ink-3"> · {m.data.constituency_en}</span>
                 )}

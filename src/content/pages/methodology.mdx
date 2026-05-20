@@ -1,0 +1,97 @@
+---
+title_en: "Methodology"
+title_ml: "നടപടിക്രമം"
+description_en: "How we record, evaluate, and update promises. The standard against which every status decision on this site can be judged."
+updated: 2026-05-20
+---
+
+This document describes exactly how we record, evaluate, and update promises. Our goal is that two thoughtful people, reading this and then reading the record, agree on what changed and why. If a status decision on the site cannot be defended against this document, the decision is wrong.
+
+## What we record
+
+We record every concrete, measurable promise made in the UDF 2026 election manifesto, released by the Indian National Congress on 2 April 2026.
+
+A promise is concrete and measurable when its fulfilment can be observed in the world: a scheme launched, a department constituted, a coverage ceiling met, a road built. Promises that are aspirational without a measurable outcome are not recorded as separate entries; we record the operational promises that follow from them.
+
+We do not record off-manifesto government actions in the main register. These are recorded separately on the initiatives page so that the record reflects the government's full activity without polluting the accountability ledger with items that were never promised.
+
+## The four statuses
+
+The status taxonomy is closed. There are four values.
+
+- **Pending ○** — No government action yet. The default state at the start of the term.
+- **In Progress ◑** — A source in our hierarchy confirms that the government has initiated, announced, or is actively pursuing the promise. A formal document is not required. Cabinet decisions, government orders constituting committees, budget allocations naming the promise, and district pilots all qualify. Slow progress is in progress.
+- **Fulfilled ✓** — Fulfilment requires either a formal document — a gazette notification, an enacted bill, a published government order — that operationalises the promise to the level the manifesto committed to, or verified on-ground evidence sourced from Tier 1 or Tier 2 that the promised benefit is being delivered to the promised beneficiaries. A pilot is not fulfilment. A rebranded existing scheme is not fulfilment. An announcement is not fulfilment.
+- **Evaded ✗** — Reserved for cases where the government has taken action that makes fulfilment structurally impossible. Privatising what was promised to be revived. Repealing what was promised to be enacted. Announcing in a Tier 1 or Tier 2 source that the promise will not be pursued. Slow progress is not evasion. Editors require at least two independent admissible sources, including one Tier 1 or Tier 2, before moving a promise to evaded.
+
+There is no "Broken", "Failed", "Partial", "Stalled", or "Watered Down". Four states. That is the entire ontology.
+
+## Source hierarchy
+
+Every status change is supported by at least one source from the tiers below. Lower numbers outrank higher: a Tier 1 source resolves a conflict with a Tier 3 source.
+
+**Tier 1 — Government gazette or government order.** Statutory publications and orders of the Government of Kerala. Required for any promise moving to fulfilled that depends on an instrument of law, regulation, or formal scheme.
+
+**Tier 2 — Kerala state government press release or cabinet statement.** Press notes from the Press Information Bureau, the Information and Public Relations Department, or named departments. Cabinet briefings and official statements by ministers in their official capacity.
+
+**Tier 3 — Wire copy (PTI or ANI) carried by a Tier-A publication.** The Tier-A publications are: Malayala Manorama, Onmanorama, Mathrubhumi, The Hindu, The Indian Express, The News Minute, Deccan Herald, Hindustan Times, The Times of India (Kerala desk). Wire copy carried only by publications outside this list is not admissible.
+
+**Tier 4 — Long-form journalism.** Original reporting from the publications named in Tier 3, with a named reporter and a dateline.
+
+## Excluded sources
+
+These are not admissible as evidence for a status change. Editors will close pull requests that rely on them.
+
+- Party press releases, from any party.
+- Tweets, Facebook posts, Instagram posts, WhatsApp forwards, and other social media output, from any source.
+- Opinion pieces, editorials, and op-eds.
+- Politicians' interviews, except where they make a categorical statement of government action that is independently confirmed in a Tier 1, 2, 3, or 4 source within seven days.
+- Anonymous sources.
+- Television panel discussions and political talk shows.
+
+The exclusion list reflects what is operationally useful, not a judgement of the value of these formats. They are excluded because they cannot be falsified by another reader.
+
+## How we evaluate evidence
+
+For every status change, editors check four things:
+
+1. **Admissibility.** Does the source sit in the hierarchy?
+2. **Faithfulness.** Does the source actually say what the summary claims? Editors read the source and quote the relevant excerpt verbatim in the evidence entry.
+3. **Status fit.** Is the new status correct given the evidence?
+4. **Conflict.** If two admissible sources disagree, the higher tier wins. If two sources at the same tier disagree, both are recorded and the status held at the more conservative reading.
+
+## Archiving and link rot
+
+Every evidence URL is mirrored to the Internet Archive at the moment its status update is merged. The archive URL is recorded alongside the original. If a source publication takes a story offline, the archive copy stands. We do not edit history to reflect a takedown.
+
+## Corrections
+
+We make mistakes. When we do, we correct them in full view.
+
+Factual errors, mis-attributions, mis-quotations, and mis-categorised promises are corrected in a new pull request that references the original. The promise detail page links to its full Git history. We do not silently rewrite past entries.
+
+If you find an error, open an issue or a pull request, or write to corrections@keralapromises.in.
+
+## Conflict of interest
+
+Editors who work for, or have worked in the last five years for, a political party, a government department, an evidence-publishing organisation, or a body whose work is named in a promise must declare the relationship publicly on their first edit to that promise. The conflict does not bar contribution; it makes the audit trail honest. A second editor without the conflict reviews the pull request before merge.
+
+## How submissions are triaged
+
+Citizens submit tips through the form linked from every page. Editors triage submissions weekly: admissibility check, source verification, pull request, second-editor review, merge, archive.org mirror.
+
+Submitters do not need a GitHub account. Submitters may ask to remain anonymous in the public record; in that case the pull request lists the editor of record, not the submitter.
+
+## Term boundaries
+
+We track the UDF 2026 manifesto over the term of the 14th Kerala Legislative Assembly, from 9 May 2026 to 23 May 2031. Promises with deadlines before the term end are evaluated against their stated deadline. Promises with deadlines after the term end are evaluated at the end of the term.
+
+If the term ends early — through dissolution, resignation, or coalition change — we record the term end as the date of the change and note the political circumstance, sourced from Tier 1 or Tier 2.
+
+## Versioning this document
+
+This document is the standard against which the site is judged. We do not change it lightly. Material changes require a public proposal as a GitHub issue, open for at least 14 days, then a pull request, then an entry in the changelog. Minor changes — typos, clearer prose — can be merged by any editor.
+
+## Changelog
+
+- 2026-05-20 — Initial methodology committed.

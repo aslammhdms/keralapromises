@@ -1,0 +1,190 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PromiseCard from "../../components/PromiseCard.astro";
+import Scorecard from "../../components/Scorecard.astro";
+import { scorecard } from "../../lib/status";
+import { STATUSES } from "../../content/config";
+import { STATUS_LABEL_EN } from "../../lib/status";
+
+const promises = await getCollection("promises");
+const sorted = [...promises].sort((a, b) =>
+  a.data.id.localeCompare(b.data.id)
+);
+const score = scorecard(promises);
+
+const categoryEntries = await getCollection("categories");
+const categories = [...categoryEntries].sort(
+  (a, b) => a.data.order - b.data.order
+);
+---
+
+<BaseLayout
+  title="All promises"
+  description="The full list of promises made in the UDF 2026 manifesto, with the current status of each and filters by category and status."
+>
+  <section class="border-b border-rule">
+    <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
+      <p class="eyebrow">The full ledger</p>
+      <h1 class="font-display mt-3 measure-prose text-h1 leading-tight text-ink-1">
+        Every promise in the UDF 2026 manifesto we have recorded so far.
+      </h1>
+      <p class="font-body mt-4 measure-prose text-body text-ink-2">
+        Filter by category or status below. Use the search box to find a promise by its words.
+      </p>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-4 sm:px-6">
+    <Scorecard data={score} locale="en" showBar={false} />
+  </section>
+
+  <section class="mx-auto max-w-6xl px-4 sm:px-6">
+    {/* Filter controls — vanilla JS toggles data-filtered on each row. */}
+    <div
+      id="promise-filters"
+      class="rule-bottom flex flex-col gap-4 py-6"
+      data-promise-count={promises.length}
+    >
+      <div class="flex flex-col gap-2">
+        <label for="promise-search" class="eyebrow">Search</label>
+        <input
+          id="promise-search"
+          type="search"
+          autocomplete="off"
+          placeholder="Search promises by keyword"
+          class="font-body w-full border-b border-rule bg-transparent py-2 text-body text-ink-1 placeholder:text-ink-3 focus:border-ink-1 focus:outline-none"
+        />
+      </div>
+
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-baseline sm:gap-8">
+        <fieldset class="flex flex-col gap-2">
+          <legend class="eyebrow">Status</legend>
+          <div class="flex flex-wrap gap-2" role="group" aria-label="Filter by status">
+            <button
+              type="button"
+              class="filter-chip font-ui rounded-full border border-ink-1 bg-ink-1 px-3 py-1 text-xs font-medium text-paper-1"
+              data-filter-type="status"
+              data-filter-value=""
+              data-active="true"
+            >All</button>
+            {STATUSES.map((s) => (
+              <button
+                type="button"
+                class="filter-chip font-ui rounded-full border border-rule bg-paper-1 px-3 py-1 text-xs font-medium text-ink-2 hover:border-ink-2"
+                data-filter-type="status"
+                data-filter-value={s}
+              >{STATUS_LABEL_EN[s]}</button>
+            ))}
+          </div>
+        </fieldset>
+
+        <fieldset class="flex flex-col gap-2">
+          <legend class="eyebrow">Category</legend>
+          <div class="flex flex-wrap gap-2" role="group" aria-label="Filter by category">
+            <button
+              type="button"
+              class="filter-chip font-ui rounded-full border border-ink-1 bg-ink-1 px-3 py-1 text-xs font-medium text-paper-1"
+              data-filter-type="category"
+              data-filter-value=""
+              data-active="true"
+            >All</button>
+            {categories.map((c) => (
+              <button
+                type="button"
+                class="filter-chip font-ui rounded-full border border-rule bg-paper-1 px-3 py-1 text-xs font-medium text-ink-2 hover:border-ink-2"
+                data-filter-type="category"
+                data-filter-value={c.data.id}
+              >{c.data.name_en}</button>
+            ))}
+          </div>
+        </fieldset>
+      </div>
+
+      <p id="promise-filter-summary" class="font-ui text-small text-ink-3 tnum">
+        Showing {promises.length} of {promises.length}
+      </p>
+    </div>
+
+    <ol id="promise-list" class="pt-2 pb-16">
+      {sorted.map((p) => (
+        <li
+          class="promise-row"
+          data-status={p.data.current_status}
+          data-category={p.data.category}
+          data-title={p.data.title_en.toLowerCase()}
+          data-id={p.data.id}
+        >
+          <PromiseCard promise={p} variant="row" locale="en" />
+        </li>
+      ))}
+    </ol>
+
+    {promises.length === 0 && (
+      <p class="font-body py-16 text-center text-body text-ink-3">
+        No promises loaded yet. The full manifesto extraction is the next phase.
+      </p>
+    )}
+  </section>
+</BaseLayout>
+
+<script>
+  const root = document.getElementById("promise-filters");
+  const list = document.getElementById("promise-list");
+  const summaryEl = document.getElementById("promise-filter-summary");
+  const search = document.getElementById("promise-search") as HTMLInputElement | null;
+  if (root && list && summaryEl && search) {
+    const filtersRoot = root;
+    const summaryNode = summaryEl;
+    const chips = Array.from(filtersRoot.querySelectorAll<HTMLButtonElement>(".filter-chip"));
+    const rows = Array.from(list.querySelectorAll<HTMLLIElement>(".promise-row"));
+    const totalRows = rows.length;
+
+    const state = { status: "", category: "", query: "" };
+
+    function setChipActive(chip: HTMLButtonElement, active: boolean) {
+      if (active) {
+        chip.dataset.active = "true";
+        chip.classList.remove("border-rule", "bg-paper-1", "text-ink-2", "hover:border-ink-2");
+        chip.classList.add("border-ink-1", "bg-ink-1", "text-paper-1");
+      } else {
+        delete chip.dataset.active;
+        chip.classList.add("border-rule", "bg-paper-1", "text-ink-2", "hover:border-ink-2");
+        chip.classList.remove("border-ink-1", "bg-ink-1", "text-paper-1");
+      }
+    }
+
+    function apply() {
+      let visible = 0;
+      for (const row of rows) {
+        const matchesStatus = !state.status || row.dataset.status === state.status;
+        const matchesCategory = !state.category || row.dataset.category === state.category;
+        const matchesQuery =
+          !state.query || (row.dataset.title ?? "").includes(state.query);
+        const ok = matchesStatus && matchesCategory && matchesQuery;
+        row.hidden = !ok;
+        if (ok) visible += 1;
+      }
+      summaryNode.textContent = `Showing ${visible} of ${totalRows}`;
+    }
+
+    for (const chip of chips) {
+      chip.addEventListener("click", () => {
+        const kind = chip.dataset.filterType as "status" | "category";
+        const value = chip.dataset.filterValue ?? "";
+        state[kind] = value;
+        for (const other of chips) {
+          if (other.dataset.filterType === kind) {
+            setChipActive(other, other === chip);
+          }
+        }
+        apply();
+      });
+    }
+
+    search.addEventListener("input", () => {
+      state.query = search.value.trim().toLowerCase();
+      apply();
+    });
+  }
+</script>

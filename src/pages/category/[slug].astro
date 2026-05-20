@@ -1,0 +1,74 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PromiseCard from "../../components/PromiseCard.astro";
+import Scorecard from "../../components/Scorecard.astro";
+import { scorecard } from "../../lib/status";
+
+export async function getStaticPaths() {
+  const promises = await getCollection("promises");
+  const categories = await getCollection("categories");
+
+  return categories.map((category) => {
+    const filtered = promises.filter(
+      (p) => p.data.category === category.data.id
+    );
+    return {
+      params: { slug: category.data.id },
+      props: { category, promises: filtered },
+    };
+  });
+}
+
+const { category, promises } = Astro.props;
+const score = scorecard(promises);
+const sorted = [...promises].sort((a, b) =>
+  a.data.id.localeCompare(b.data.id)
+);
+---
+
+<BaseLayout
+  title={category.data.name_en}
+  description={category.data.description_en}
+>
+  <section class="border-b border-rule">
+    <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
+      <p class="eyebrow">Category</p>
+      <h1 class="font-display mt-3 text-display-s leading-tight text-ink-1">
+        {category.data.name_en}
+      </h1>
+      <p
+        lang="ml"
+        class="font-malayalam mt-2 text-h3 text-ink-3"
+      >
+        {category.data.name_ml}
+      </p>
+      <p class="font-body measure-prose mt-6 text-body text-ink-2">
+        {category.data.description_en}
+      </p>
+      <p class="font-ui mt-6 text-small text-ink-3">
+        <a href="/promises" class="text-ink-2 no-underline hover:text-ink-1">
+          ← All promises
+        </a>
+      </p>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-4 sm:px-6">
+    <Scorecard data={score} locale="en" />
+  </section>
+
+  <section class="mx-auto max-w-6xl px-4 pb-16 sm:px-6">
+    {sorted.length === 0 ? (
+      <p class="font-body py-16 text-center text-body text-ink-3">
+        No promises in this category yet.
+      </p>
+    ) : (
+      <div class="grid grid-cols-1 gap-x-10 gap-y-2 pt-2 sm:grid-cols-2 lg:grid-cols-3">
+        {sorted.map((p) => (
+          <PromiseCard promise={p} variant="card" />
+        ))}
+      </div>
+    )}
+  </section>
+</BaseLayout>

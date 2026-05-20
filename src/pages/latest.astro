@@ -1,0 +1,69 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import StatusBadge from "../components/StatusBadge.astro";
+import CategoryPill from "../components/CategoryPill.astro";
+import { latestUpdates } from "../lib/status";
+import { formatLongDate } from "../lib/dates";
+
+const promises = await getCollection("promises");
+const updates = latestUpdates(promises, 200);
+---
+
+<BaseLayout
+  title="Latest updates"
+  description="Every status update ever recorded on Kerala Promises, reverse-chronological. Subscribe via RSS to follow along."
+>
+  <section class="border-b border-rule">
+    <div class="mx-auto max-w-4xl px-4 py-12 sm:px-6 sm:py-16">
+      <p class="eyebrow">All updates</p>
+      <h1 class="font-display mt-3 measure-prose text-display-s leading-tight text-ink-1">
+        Every status change we have recorded, newest first.
+      </h1>
+      <p class="font-body mt-6 measure-prose text-body text-ink-2">
+        Subscribe with the <a href="/rss.xml" rel="alternate" type="application/rss+xml">RSS feed</a> to follow new entries as they land.
+      </p>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-4xl px-4 py-12 sm:px-6">
+    {updates.length === 0 ? (
+      <p class="font-body py-16 text-center text-body text-ink-3">
+        No status updates yet.
+      </p>
+    ) : (
+      <ol class="space-y-10">
+        {updates.map(({ promise, update }) => {
+          const href = `/promises/${promise.data.slug}`;
+          return (
+            <li class="grid grid-cols-1 gap-x-8 gap-y-3 border-b border-rule pb-8 sm:grid-cols-[10rem_1fr]">
+              <header class="font-ui flex flex-col gap-2 text-small text-ink-3">
+                <time
+                  datetime={update.date.toISOString().slice(0, 10)}
+                  class="font-display tnum text-h3 leading-snug text-ink-1"
+                >
+                  {formatLongDate(update.date, "en")}
+                </time>
+                <StatusBadge status={update.status} size="sm" />
+                <CategoryPill category={promise.data.category} />
+              </header>
+              <div>
+                <h2 class="font-display text-h2 leading-snug text-ink-1">
+                  <a href={href} class="text-ink-1 no-underline hover:underline hover:decoration-rule-2">
+                    {promise.data.title_en}
+                  </a>
+                </h2>
+                <p class="font-body mt-3 text-body leading-relaxed text-ink-2">
+                  {update.summary_en}
+                </p>
+                <p class="font-ui mt-3 text-small text-ink-3">
+                  Editor: {update.editor}
+                </p>
+              </div>
+            </li>
+          );
+        })}
+      </ol>
+    )}
+  </section>
+</BaseLayout>

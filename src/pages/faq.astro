@@ -1,0 +1,19 @@
+---
+import { getEntry, render } from "astro:content";
+import ProseLayout from "../layouts/ProseLayout.astro";
+
+const entry = await getEntry("pages", "faq");
+if (!entry) {
+  throw new Error("Missing src/content/pages/faq.mdx");
+}
+const { Content } = await render(entry);
+---
+
+<ProseLayout
+  eyebrow="FAQ"
+  title={entry.data.title_en}
+  description={entry.data.description_en}
+  updated={entry.data.updated}
+>
+  <Content />
+</ProseLayout>

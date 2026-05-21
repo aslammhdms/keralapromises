@@ -1,0 +1,95 @@
+name: refresh-reminder
+
+# Opens a daily GitHub issue reminding the maintainer to run
+# /refresh-tracker in Claude Code. We deliberately do NOT run an LLM
+# in CI — the slash command is invoked manually so a human is on the
+# loop for every status change, matching BRIEF.md Section 11.
+#
+# Idempotency: if a refresh-reminder issue is already open, this
+# workflow does nothing. The next day's run only opens a new issue
+# once the existing one is closed.
+
+on:
+  schedule:
+    # 00:30 UTC daily = 06:00 IST. Catches the morning news cycle in
+    # Kerala. Cron uses UTC and does not honour DST (India is +05:30
+    # year-round so this is stable).
+    - cron: "30 0 * * *"
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  contents: read
+
+concurrency:
+  group: refresh-reminder
+  cancel-in-progress: false
+
+jobs:
+  remind:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Skip if a reminder issue is already open
+        id: existing
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          OPEN=$(gh issue list \
+            --repo ${{ github.repository }} \
+            --state open \
+            --label refresh-reminder \
+            --json number \
+            --jq 'length')
+          echo "open_count=$OPEN" >> $GITHUB_OUTPUT
+          if [ "$OPEN" -gt 0 ]; then
+            echo "An open refresh-reminder already exists. Skipping."
+          fi
+
+      - name: Open today's refresh-reminder issue
+        if: steps.existing.outputs.open_count == '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TODAY=$(date -u +'%Y-%m-%d')
+          TITLE="Refresh tracker — $TODAY"
+          BODY=$(cat <<'EOF'
+          Daily reminder to refresh the tracker from Tier-A news.
+
+          ## Run
+
+          In a Claude Code session at the repo root, run:
+
+          ```
+          /refresh-tracker
+          ```
+
+          The slash command will:
+
+          1. Read `BRIEF.md` and the source registry.
+          2. Inventory existing promise + cabinet files.
+          3. Run a targeted Tier-A news sweep (~20–25 searches max).
+          4. Open a Tier-1 check of `manifesto.kerala.gov.in`.
+          5. Draft status updates / cabinet updates with proper evidence cards.
+          6. Run `npm run typecheck` and `npm run build`.
+          7. Commit atomically on `refresh/YYYY-MM-DD` and open a PR (BRIEF §11).
+
+          If the sweep finds nothing, the command appends a one-line entry to `docs/STATUS_LOG.md` and commits to `main` directly — no PR.
+
+          ## Close this issue when
+
+          - A PR is opened by `/refresh-tracker`, OR
+          - You ran the command and it logged "no updates" to `STATUS_LOG.md`, OR
+          - You're choosing to skip today (note the reason in a comment if it's likely to repeat).
+
+          A new issue will be opened tomorrow only after this one is closed.
+
+          ---
+
+          🤖 Opened by `.github/workflows/refresh-reminder.yml`
+          EOF
+          )
+          gh issue create \
+            --repo ${{ github.repository }} \
+            --title "$TITLE" \
+            --label refresh-reminder \
+            --body "$BODY"

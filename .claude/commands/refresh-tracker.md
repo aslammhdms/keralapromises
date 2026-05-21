@@ -29,7 +29,9 @@ This inventory is your idempotency check. **Do not re-record a status update for
 
 ## 3. Run the news sweep — targeted, parallel, Tier-A only
 
-Budget: roughly one to two searches per non-fulfilled promise, plus a small set for cabinet news. Aim for ~20–25 searches max in a single run.
+Budget: roughly one to two searches per non-fulfilled promise, plus a small set for cabinet news, plus one Tier-1 portal check. Aim for ~20–25 searches max in a single run.
+
+**Tier-1 portal check (do this first).** Fetch `https://manifesto.kerala.gov.in/`. This is the Government of Kerala's own manifesto-tracker portal — historically anchored on the LDF 2021 manifesto, but expected to be rebuilt for UDF 2026 at some point. When it does re-anchor on UDF 2026, it becomes the highest-grade evidence source we have. Check whether the portal currently lists any UDF 2026 promises. If yes, every item there is a candidate for a status flip — frequently to `fulfilled`, because the portal's own status ("met / partially met / no") is government self-reporting and qualifies as Tier 2 at minimum. Cross-reference with one Tier-A news source to corroborate before flipping. Note that the portal is login-gated for some content and Malayalam-first; record what's publicly visible.
 
 Per-promise: search for government action on each promise whose `current_status` is `pending` or `in_progress`. Skip promises already `fulfilled` or `evaded`.
 

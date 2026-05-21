@@ -1,0 +1,46 @@
+---
+import type { EvidenceStrength } from "../lib/evidence";
+import { EVIDENCE_STRENGTH_LABEL } from "../lib/evidence";
+
+interface Props {
+  strength: EvidenceStrength;
+  // Optional: the count is shown when > 0 so a reader can see
+  // "Corroborated · 3 sources" without us choosing a fixed phrasing.
+  sourceCount?: number;
+}
+
+const { strength, sourceCount } = Astro.props;
+
+const label = EVIDENCE_STRENGTH_LABEL[strength];
+
+// Muted styling on purpose — BRIEF §8 wants the status badge to be
+// the loudest signal. The pill is a secondary, advisory glyph.
+const styleClass: Record<EvidenceStrength, string> = {
+  single: "text-ink-3",
+  corroborated: "text-ink-3",
+  tier1: "text-ink-2",
+};
+
+const titleHelp: Record<EvidenceStrength, string> = {
+  single: "Backed by a single evidence entry. We record it cautiously and flag it for corroboration.",
+  corroborated: "Backed by two or more distinct publishers reporting the same fact.",
+  tier1: "Backed by a Tier 1 government source — gazette, government order, or equivalent.",
+};
+---
+
+<span
+  class:list={[
+    "font-ui inline-flex items-center gap-1 text-micro uppercase tracking-wider",
+    styleClass[strength],
+  ]}
+  title={titleHelp[strength]}
+  data-evidence-strength={strength}
+>
+  <span aria-hidden="true">·</span>
+  <span>{label}</span>
+  {sourceCount && sourceCount > 1 && (
+    <span class="tnum text-ink-3" aria-label={`${sourceCount} sources`}>
+      · {sourceCount} sources
+    </span>
+  )}
+</span>

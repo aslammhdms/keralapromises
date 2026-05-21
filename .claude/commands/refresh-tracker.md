@@ -167,13 +167,24 @@ News sweep for YYYY-MM-DD against the Tier-A registry. Recorded:
 - Return to the branch the user started on: `git checkout <previous-branch>`.
 - Do not merge the PR. Reviewer approval is part of BRIEF §11 and is up to the maintainer.
 
+## 11. Empty-run behaviour
+
+If the news sweep produces no admissible findings — no Tier-A coverage of any tracked promise, no portfolio gazette URL surfaced, no Tier-1 ACS-portal entry corroborated — do not open an empty PR. Instead:
+
+1. Append a one-line entry to `docs/STATUS_LOG.md` in the format `- YYYY-MM-DD — no admissible updates found. Searches: N.` (substitute the actual count).
+2. Commit on `main` directly with message `chore(log): refresh sweep on YYYY-MM-DD — no admissible updates`. BRIEF §11's PR requirement applies to status changes; a log line is not a status change.
+3. Push the commit to `origin/main`.
+4. Close the day's reminder issue on GitHub (`gh issue close --reason completed`) with a comment linking to the new log entry.
+
+`docs/STATUS_LOG.md` is an auditable record of when we checked and found nothing, so a reader can distinguish "we haven't looked" from "we looked and there was no news." It is the audit-trail equivalent of an empty PR without the PR noise.
+
 ---
 
 ## What this command does NOT do
 
 - It does not extract new manifesto promises. Run `/refresh-tracker --extract` for that (separate flag, separate concerns).
-- It does not edit `BRIEF.md`, schemas, source registry, or any page outside `src/content/promises/` and `src/content/cabinet/`.
-- It does not push to `main` directly. Ever.
+- It does not edit `BRIEF.md`, schemas, source registry, or any page outside `src/content/promises/`, `src/content/cabinet/`, and `docs/STATUS_LOG.md`.
+- It does not push status changes to `main` directly. Status changes go through a refresh-branch PR. The only thing it commits directly to `main` is a one-line `STATUS_LOG.md` entry on an empty run (§11).
 - It does not flip a status to `fulfilled` on a single Tier-A news source.
 
 ## On failure

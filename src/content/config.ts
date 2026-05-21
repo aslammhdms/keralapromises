@@ -34,12 +34,21 @@ export type Category = (typeof CATEGORIES)[number];
 // 5.3. `manifesto` is the bootstrap source for pending entries at term
 // start. Excluded sources (tweets, party press releases, opinion pieces)
 // have no value here on purpose — there is no way to encode them.
+//
+// `cag_report`, `rti_response`, and `budget_document` are Tier 1 government
+// sources distinct from gazette / GO: CAG reports are the constitutional
+// auditor's findings; RTI responses are statutory disclosures by departments;
+// budget_document covers the budget speech, demand-for-grants, and the
+// Finance Accounts published by the AG.
 export const EVIDENCE_TYPES = [
   "manifesto",
   "gazette",
   "government_order",
   "government_press_release",
   "cabinet_statement",
+  "cag_report",
+  "rti_response",
+  "budget_document",
   "wire",
   "longform",
 ] as const;

@@ -7,7 +7,11 @@ import { primaryMinisterForCategory } from "../../lib/cabinet";
 // Versioned public API. BRIEF.md Section 10 names this a public
 // contract. Breaking changes (renames, removals, type changes) require
 // bumping API_VERSION and documenting the diff in /methodology.
-const API_VERSION = "1";
+//
+// v2 (2026-05-21) — adds cag_report, rti_response, budget_document to
+// the evidence.type enum. Existing consumers may see these new values
+// in status_history[].evidence[].type once entries start using them.
+const API_VERSION = "2";
 
 export const prerender = true;
 

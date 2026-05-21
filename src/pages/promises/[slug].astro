@@ -6,8 +6,10 @@ import StatusTimeline from "../../components/StatusTimeline.astro";
 import CategoryPill from "../../components/CategoryPill.astro";
 import EditOnGitHub from "../../components/EditOnGitHub.astro";
 import SubmitTip from "../../components/SubmitTip.astro";
+import EvidenceStrengthPill from "../../components/EvidenceStrengthPill.astro";
 import { formatLongDate } from "../../lib/dates";
 import { primaryMinisterForCategory, displayName as ministerName } from "../../lib/cabinet";
+import { evidenceStrength } from "../../lib/evidence";
 
 export async function getStaticPaths() {
   const promises = await getCollection("promises");
@@ -22,6 +24,7 @@ const data = promise.data;
 const { Content } = await render(promise);
 
 const latestUpdate = data.status_updates[data.status_updates.length - 1];
+const latestStrength = evidenceStrength(latestUpdate.evidence);
 const sourceFile = `src/content/promises/${promise.id}.mdx`;
 
 const allPromises = await getCollection("promises");
@@ -90,7 +93,13 @@ const articleSchema = {
         )}
 
         <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
-          <StatusBadge status={data.current_status} size="lg" />
+          <div class="flex flex-col gap-1">
+            <StatusBadge status={data.current_status} size="lg" />
+            <EvidenceStrengthPill
+              strength={latestStrength}
+              sourceCount={latestUpdate.evidence.length}
+            />
+          </div>
           <div class="font-ui text-small text-ink-3">
             <span class="text-ink-2">Last updated</span>
             <span class="tnum ml-1 text-ink-1">
